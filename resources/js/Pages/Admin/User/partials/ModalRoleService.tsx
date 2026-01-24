@@ -1,10 +1,9 @@
-import { App, Button, Form, Input, Modal, Pagination, Space, Table } from 'antd'
+import { App, Button, Input, Modal, Pagination, Space, Table } from 'antd'
 import { useEffect, useState } from 'react'
 
-import { EditOutlined } from '@ant-design/icons';
 import { Service, User } from '@/types';
 import axios from 'axios';
-import { ArrowRightFromLine, Server } from 'lucide-react';
+import { ArrowRightFromLine } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import Column from 'antd/es/table/Column';
 
