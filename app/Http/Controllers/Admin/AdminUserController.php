@@ -9,6 +9,9 @@ use Inertia\Response;
 use Illuminate\Support\Facades\Hash;
 use Auth;
 use App\Models\User;
+use App\Models\UserService;
+
+
 
 class AdminUserController extends Controller
 {
@@ -100,6 +103,17 @@ class AdminUserController extends Controller
 
         return response()->json([
             'status' => 'changed'
+        ], 200);
+    }
+
+    public function assignService(Request $req, $id){
+        $data = UserService::find($id);
+        $data->user_id = $id;
+        $data->service_id = $req->service_id;
+        $data->save();
+
+        return response()->json([
+            'status' => 'assigned'
         ], 200);
     }
 }

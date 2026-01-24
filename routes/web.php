@@ -64,6 +64,8 @@ Route::prefix('admin')->middleware('auth', 'admin')->group(function () {
     Route::resource('/services', App\Http\Controllers\Admin\AdminServiceController::class)->names('admin.services');
     Route::get('/get-services', [App\Http\Controllers\Admin\AdminServiceController::class, 'getData'])->name('admin.services.get-data');
 
+
+
     Route::resource('/roles', App\Http\Controllers\Admin\AdminRoleController::class)->names('admin.roles');
     Route::get('/get-roles', [App\Http\Controllers\Admin\AdminRoleController::class, 'getData'])->name('admin.roles.get-data');
 
@@ -121,6 +123,8 @@ Route::prefix('admin')->middleware('auth', 'admin')->group(function () {
     Route::get('/get-users', [App\Http\Controllers\Admin\AdminUserController::class, 'getData'])->name('users.getdata');
     Route::post('/users-change-password/{id}', [App\Http\Controllers\Admin\AdminUserController::class, 'changePassword'])->name('users.change-password');
     Route::post('/change-password/{id}', [App\Http\Controllers\Admin\AdminUserController::class, 'changePassword'])->name('users.change-password');
+    Route::post('/users-assign-service/{id}', [App\Http\Controllers\Admin\AdminUserController::class, 'assignService'])->name('admin.users.assign-service');
+
 
 
     Route::resource('/roles', App\Http\Controllers\Admin\AdminRoleController::class);

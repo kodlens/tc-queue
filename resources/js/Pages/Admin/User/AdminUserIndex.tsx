@@ -160,13 +160,7 @@ const AdminUserIndex = () => {
 							)}/> */}
 							<Column title="Action" key="action"
 								render={(_, user:User) => (
-									// <Space size="small">
-									// 	<Button type='text' icon={<EditOutlined/>}
-									// 		onClick={ ()=> handleEditClick(data.id) } />
-                                    //     <ModalRoleService user={data} onSuccess={loadDataAsync}/>
-									// 	<ChangePassword data={data} onSuccess={loadDataAsync}/>
-									// </Space>
-                                    <Space size="small">
+                  <Space size="small">
 										<Dropdown  trigger={['click']}
 											menu={{items: createMenuItems(user) }} >
 											<Button >

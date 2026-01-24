@@ -1,5 +1,5 @@
-import { App, Button, Form, Modal, Pagination, Space, Table } from 'antd'
-import { useState } from 'react'
+import { App, Button, Form, Input, Modal, Pagination, Space, Table } from 'antd'
+import { useEffect, useState } from 'react'
 
 import { EditOutlined } from '@ant-design/icons';
 import { Service, User } from '@/types';
@@ -18,33 +18,41 @@ interface Props {
 export default function ModalRoleService({ user, open, onClose, onSuccess }: Props) {
 
   const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
   const [page, setPage] = useState<number>(1)
-
-  const [form] = Form.useForm();
+  const [search, setSearch] = useState<string>('')
   const { notification, } = App.useApp();
 
-  function onFinish(values: any): void {
+  function assignService(values:Service): void {
     setLoading(true)
-    axios.post('/admin/get-services')
+    axios.post('/admin/users-assign-service/' + user.id, values)
       .then(res => {
-        if (res.data.status === 'success') {
-          notification.info({ message: "Service successfully assigned.", duration: 2, showProgress: true })
+        if (res.data.status === 'assigned') {
+          notification.success({ message: "Service successfully assigned.", duration: 2, showProgress: true })
         }
         setLoading(false)
+        onSuccess()
 
       }).catch(err => {
-        if (err.response.status === 422)
-          setErrors(err.response.data.errors)
-
+        notification.error({ message: err.response.data.message, duration: 2, showProgress: true })
         setLoading(false)
+        onSuccess()
       })
   }
 
+  useEffect(() => {
+    console.log(user);
+
+  }, [user])
+
   const { data, isFetching } = useQuery({
-    queryKey: ['services'],
+    queryKey: ['services', search],
     queryFn: async () => {
-      const res = await axios.get('/admin/get-services')
+      const params = new URLSearchParams({
+        perpage: '10',
+        search: search.toString(),
+        page: page.toString(),
+      })
+      const res = await axios.get(`/admin/get-services?${params}`)
       return res.data
     },
     refetchOnWindowFocus: false
@@ -61,6 +69,10 @@ export default function ModalRoleService({ user, open, onClose, onSuccess }: Pro
         footer={null}
       >
 
+        <Input.Search placeholder="Search"  onSearch={(value) => {
+          setSearch(value)
+        }} enterButton />
+
       <Table dataSource={data ? data?.data : []}
         loading={isFetching}
         rowKey={(data) => data.id}
@@ -68,13 +80,13 @@ export default function ModalRoleService({ user, open, onClose, onSuccess }: Pro
 
         <Column title="Id" dataIndex="id" />
         <Column title="Role" dataIndex="name" key="name" />
-        <Column title="Slug" dataIndex="slug" key="slug" />
+        {/* <Column title="Slug" dataIndex="slug" key="slug" /> */}
         <Column title="Action" key="action"
           render={(_, data: Service) => (
             <Space size="small">
-              <Button icon={<ArrowRightFromLine size={16} />} onClick={() => {
-
-              }} />
+              <Button loading={loading}
+               icon={<ArrowRightFromLine size={16} />}
+               onClick={ ()=> assignService(data) } />
             </Space>
           )}
         />
