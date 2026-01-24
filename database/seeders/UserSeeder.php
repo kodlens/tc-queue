@@ -15,28 +15,13 @@ class UserSeeder extends Seeder
     {
         //
         $users = [
-            [
-                'username' => 'admin',
-                'lname' => 'ZAPANTA',
-                'fname' => 'JEZEL',
-                'mname' => '',
-                'sex' => 'MALE',
-                'email' => 'admin@publication.org',
-                'password' => Hash::make('1'),
-                'role' => 'ADMINISTRATOR',
-            ],
-
-            [
-                'username' => 'user',
-                'lname' => 'KAAMINO',
-                'fname' => 'MELDHE',
-                'mname' => '',
-                'sex' => 'FEMALE',
-                'email' => 'user@publication.org',
-                'password' => Hash::make('1'),
-                'role' => 'STUDENT',
-            ],
-           
+           'username' => 'staff',
+            'lname' => 'Dela Cruz',
+            'fname' => 'Juan',
+            'mname' => 'P',
+            'role' => 'STAFF',
+            'password' => Hash::make('a'),
+            'email_verified_at' => now(),
         ];
 
         \App\Models\User::insertOrIgnore($users);

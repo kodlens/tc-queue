@@ -15,7 +15,7 @@ import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
   const { Header, Sider, Content } = Layout;
 
 
-export default function EncoderLayout(
+export default function StaffLayout(
     { user, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
 
     const { post } = useForm();

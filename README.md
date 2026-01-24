@@ -1,4 +1,4 @@
-## KM EXTERNAL BACKEND
+## TC QUEUE DOC TRACKING/MONITORING
 
 ### Application Requirements (Windows)
 Install the following:
@@ -37,12 +37,12 @@ Install the following:
 
 Clone the repository or run the command (only the collaborator can clone this repo)
 ```bash    
-git clone https://github.com/kodlens/km-external-be.git
+git clone https://github.com/kodlens/tc-queue.git
 ```
 
 Go to the repository (repo-name is publication-portal)
 ```bash
-cd repo-name
+cd <repo-name>
 ```
 
 Install the vendor
@@ -75,8 +75,5 @@ https://github.com/react-component/picker/pull/765
 
 
 Notes
-    All status are static
-
-    Roles (Publisher, Encoder,)
-    (adviser, student, writer, desgner, editor)
+    Admin and Staff for role
 

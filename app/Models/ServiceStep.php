@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class ServiceStep extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'role',
-        'guard_name',
+        'service_id',
+        'name',
+        'step_order'
     ];
 
-
-    public function role_has_permissions(){
-        return $this->hasMany(RoleHasPermission::class, 'role_id');
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
     }
 }
