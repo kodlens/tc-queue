@@ -1,14 +1,13 @@
-import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { Service, PageProps, User } from '@/types'
+import { Service } from '@/types'
 import { Head } from '@inertiajs/react'
 
 import { FileAddOutlined,
     DeleteOutlined, EditOutlined,
     QuestionCircleOutlined } from '@ant-design/icons';
 
-import { Card, Space, Table, Modal,
+import {  Space, Table, Modal,
     Pagination, Button,
-    Form, Input, Select, Checkbox,
+    Form, Input, Checkbox,
 	App} from 'antd';
 
 
@@ -29,25 +28,26 @@ const AdminServiceIndex = () => {
 
     const [open, setOpen] = useState(false); //for modal
 
-	const [perPage, setPerPage] = useState(10);
+
+    const perPage = 10;
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState('');
     const [errors, setErrors] = useState<any>({});
 
-    const [sortBy, setSortBy] = useState<any>('id.desc');
+
 
     const [id, setId] = useState(0);
 
 
 
-    const  { data, isFetching, error, refetch } = useQuery({
-        queryKey: ['categories', page, perPage, sortBy],
+    const  { data, isFetching, refetch } = useQuery({
+        queryKey: ['categories', page, perPage],
         queryFn: async () => {
             const params = new URLSearchParams({
                 perpage: perPage.toString(),
                 search: search.toString(),
                 page: page.toString(),
-                sort_by: sortBy.toString(),
+                //sort_by: sortBy.toString(),
             });
             const res = await axios.get(`/admin/get-services?${params}`)
             return res.data
@@ -55,7 +55,7 @@ const AdminServiceIndex = () => {
     })
 
 
-    const onPageChange = (index:number, perPage:number) => {
+    const onPageChange = (index:number) => {
         setPage(index)
     }
 

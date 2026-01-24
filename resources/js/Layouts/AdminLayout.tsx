@@ -4,17 +4,15 @@ import { Link, router, useForm } from '@inertiajs/react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  FilePptOutlined,
   UserOutlined,
   ProfileOutlined,
-  FormOutlined,
   BarsOutlined,
   DashboardOutlined,
 } from '@ant-design/icons';
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
-import { LogOut } from 'lucide-react';
+import { LogOut, Shield } from 'lucide-react';
 
 const { Header, Sider, Content } = Layout;
 
@@ -66,63 +64,43 @@ export default function AdminLayout({
       onClick: () => router.visit('/admin/services'),
     },
     {
-      key: 'admin.categories',
+      key: 'admin.service-steps',
       icon: <BarsOutlined />,
-      label: 'Categories',
-      onClick: () => router.visit('/admin/categories'),
+      label: 'Service Steps',
+      onClick: () => router.visit('/admin/service-steps'),
     },
+    //{ type: 'divider' },
+
+    //{ type: 'divider' },
+    // {
+    //   key: 'posts',
+    //   icon: <FormOutlined />,
+    //   label: 'Posts',
+    //   children: [
+    //     {
+    //       key: 'admin.posts.articles',
+    //       label: 'Articles',
+    //       onClick: () => router.visit('/admin/posts'),
+    //     },
+    //     {
+    //       key: 'admin.posts.featureds',
+    //       label: 'Featured Posts',
+    //       onClick: () => router.visit('/admin/post-featured'),
+    //     },
+    //     {
+    //       key: 'admin.posts.archives',
+    //       label: 'Archives',
+    //       onClick: () => router.visit('/admin/post-archives'),
+    //     },
+    //   ],
+    // },
     { type: 'divider' },
     {
-      key: 'page-sections',
-      icon: <FilePptOutlined />,
-      label: 'Page Sections',
-      children: [
-        {
-          key: 'admin.page-sections.banners',
-          label: 'Banners',
-          onClick: () => router.visit('/admin/page-sections/banners'),
-        },
-        {
-          key: 'admin.page-sections.magazines',
-          label: 'Magazines',
-          onClick: () => router.visit('/admin/page-sections/magazines'),
-        },
-        {
-          key: 'admin.page-sections.dostvs',
-          label: 'DOSTv',
-          onClick: () => router.visit('/admin/page-sections/dostvs'),
-        },
-        {
-          key: 'admin.page-sections.videos',
-          label: 'Videos',
-          onClick: () => router.visit('/admin/page-sections/videos'),
-        },
-      ],
+      key: 'admin.roles',
+      icon: <Shield size={16}/> ,
+      label: 'Roles',
+      onClick: () => router.visit('/admin/roles'),
     },
-    { type: 'divider' },
-    {
-      key: 'posts',
-      icon: <FormOutlined />,
-      label: 'Posts',
-      children: [
-        {
-          key: 'admin.posts.articles',
-          label: 'Articles',
-          onClick: () => router.visit('/admin/posts'),
-        },
-        {
-          key: 'admin.posts.featureds',
-          label: 'Featured Posts',
-          onClick: () => router.visit('/admin/post-featured'),
-        },
-        {
-          key: 'admin.posts.archives',
-          label: 'Archives',
-          onClick: () => router.visit('/admin/post-archives'),
-        },
-      ],
-    },
-    { type: 'divider' },
     {
       key: 'admin.users',
       icon: <UserOutlined />,

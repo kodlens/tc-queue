@@ -1,19 +1,16 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { PageProps, User } from '@/types'
 import { Head } from '@inertiajs/react'
 
-import { FileAddOutlined, LikeOutlined,
-    DeleteOutlined, EditOutlined,
-	EyeInvisibleOutlined,EyeTwoTone,
-    QuestionCircleOutlined } from '@ant-design/icons';
+import { FileAddOutlined, EditOutlined,
+	EyeInvisibleOutlined,EyeTwoTone} from '@ant-design/icons';
 
 import { Space, Table,
     Pagination, Button, Modal,
-    Form, Input, Select, Checkbox,
+    Form, Input, Select,
 	App } from 'antd';
 
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios';
 import ChangePassword from './partials/ChangePassword';
 import AdminLayout from '@/Layouts/AdminLayout';
@@ -22,7 +19,7 @@ import CardTitle from '@/Components/CardTitle';
 const { Column } = Table;
 
 
-const AdminUserIndex = ({ auth }: PageProps) => {
+const AdminUserIndex = () => {
 
 	const [form] = Form.useForm();
 
@@ -33,12 +30,10 @@ const AdminUserIndex = ({ auth }: PageProps) => {
     const [total, setTotal] = useState(0);
 
     const [open, setOpen] = useState(false); //for modal
-	const [passwordVisible, setPasswordVisible] = React.useState(false);
 
 	const [perPage, setPerPage] = useState(10);
     const [page, setPage] = useState(1);
-    const [search, setSearch] = useState('');
-    const [errors, setErrors] = useState<any>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     const [id, setId] = useState(0);
 
@@ -68,7 +63,7 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 
     useEffect(()=>{
         loadDataAsync()
-    },[perPage, search, page])
+    },[perPage, page])
 
 
     const onPageChange = (index:number, perPage:number) => {
@@ -124,7 +119,7 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 				}
 			}catch(err:any){
 				if(err.response.status === 422){
-
+                    setErrors(err.response.data.errors)
 				}
 			}
 		}else{
@@ -137,7 +132,7 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 				}
 			}catch(err:any){
 				if(err.response.status === 422){
-
+                    setErrors(err.response.data.errors)
 				}
 			}
 		}
@@ -153,7 +148,7 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 					sm:w-[640px]
 					md:w-[990px]'>
 					{/* card header */}
-          <CardTitle title="LIST OF USERS" />
+                    <CardTitle title="LIST OF USERS" />
 
 					{/* card body */}
 					<div>
@@ -216,7 +211,7 @@ const AdminUserIndex = ({ auth }: PageProps) => {
                     htmlType: "submit",
                 }}
                 onCancel={() => setOpen(false)}
-                destroyOnClose
+                destroyOnHidden
                 modalRender={(dom) => (
                     <Form
                         layout="vertical"
@@ -224,12 +219,13 @@ const AdminUserIndex = ({ auth }: PageProps) => {
                         name="form_in_modal"
                         autoComplete="off"
                         initialValues={{
-                            username: "",
-                            password: "",
-                            email: "",
-                            name: "",
-                            sex: "MALE",
-                            role: "USER",
+                            username: '',
+                            password: '',
+                            email: '',
+                            lname: '',
+                            fname: '',
+                            mname: '',
+                            role: '',
                             active: true,
                         }}
                         clearOnDestroy
@@ -346,10 +342,7 @@ const AdminUserIndex = ({ auth }: PageProps) => {
                         ]}
                     />
                 </Form.Item>
-
             </Modal>
-
-
 		</>
 	)
 }

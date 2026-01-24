@@ -32,9 +32,7 @@ const AdminDashboard = ({ auth }: PageProps)  =>{
                 <div className="bg-white rounded-2xl shadow p-6">
                     {/* <PublicationTimelinessTable /> */}
                 </div>
-
             </div>
-
         </>
     )
 }
