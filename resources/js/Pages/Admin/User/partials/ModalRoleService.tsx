@@ -1,5 +1,5 @@
 import { App, Button, Input, Modal, Pagination, Space, Table } from 'antd'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Service, User } from '@/types';
 import axios from 'axios';
@@ -37,11 +37,6 @@ export default function ModalRoleService({ user, open, onClose, onSuccess }: Pro
         onSuccess()
       })
   }
-
-  useEffect(() => {
-    console.log(user);
-
-  }, [user])
 
   const { data, isFetching } = useQuery({
     queryKey: ['services', search],

@@ -56,7 +56,7 @@ const AdminUserIndex = () => {
 			key: 'admin.users.change-password',
 			icon: <KeySquare size={14}/>,
 			onClick: () => {
-          setUser(user)
+          setUser(userData)
           setChangePasswordOpen(true)
       },
     },
@@ -65,7 +65,7 @@ const AdminUserIndex = () => {
 			key: 'admin.users.assign-services',
 			icon: <ArrowBigRight size={14}/>,
 			onClick: () => {
-        setUser(user)
+        setUser(userData)
         setRoleServiceOpen(true)
       },
     },

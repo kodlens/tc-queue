@@ -19,18 +19,22 @@ export const ModalUserAddEdit = ({ user, open, onClose, onSuccess }: Props) => {
 
 
   useEffect(() => {
+    if(!open) return
+
     setErrors({})
     if (user.id) {
       try {
         //const response = axios.get<User>(`/admin/users/${dataId}`);
-        form.setFields([
-          { name: 'username', value: user.username },
-          { name: 'lname', value: user.lname },
-          { name: 'fname', value: user.fname },
-          { name: 'mname', value: user.mname },
-          { name: 'email', value: user.email },
-          { name: 'role', value: user.role }
-        ]);
+        form.setFieldsValue(
+          {
+            username: user.username,
+            lname: user.lname,
+            fname: user.fname,
+            mname: user.mname,
+            email: user.email,
+            role: user.role,
+          }
+        );
       } catch (err) {
       }
     }

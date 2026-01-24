@@ -107,10 +107,21 @@ class AdminUserController extends Controller
     }
 
     public function assignService(Request $req, $id){
-        $data = UserService::find($id);
-        $data->user_id = $id;
-        $data->service_id = $req->service_id;
-        $data->save();
+
+        $find = UserService::where('user_id', $id)->where('service_id', $req->id)->first();
+        if($find){
+            return response()->json([
+                'errors' => [
+                    'status' => ['Already assigned.']
+                ],
+                'message' => 'Already assigned.'
+            ], 422);
+        }
+
+        UserService::create([
+            'user_id' => $id,
+            'service_id' => $req->id
+        ]);
 
         return response()->json([
             'status' => 'assigned'
