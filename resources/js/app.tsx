@@ -53,6 +53,7 @@ createInertiaApp({
                         // Alias Token
                         // colorBgContainer: '#ffff',
                         fontFamily: 'Poppins, sans-serif',
+                        colorPrimary: '#FF6500', // your primary color
                     },
 
             }}>

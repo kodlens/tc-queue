@@ -2,12 +2,12 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { PageProps, User } from '@/types'
 import { Head } from '@inertiajs/react'
 
-import { FileAddOutlined, LikeOutlined, 
-    DeleteOutlined, EditOutlined, 
+import { FileAddOutlined, LikeOutlined,
+    DeleteOutlined, EditOutlined,
 	EyeInvisibleOutlined,EyeTwoTone,
     QuestionCircleOutlined } from '@ant-design/icons';
 
-import { Space, Table, 
+import { Space, Table,
     Pagination, Button, Modal,
     Form, Input, Select, Checkbox,
 	App } from 'antd';
@@ -23,7 +23,7 @@ const { Column } = Table;
 
 
 const AdminUserIndex = ({ auth }: PageProps) => {
-	
+
 	const [form] = Form.useForm();
 
 	const  { notification } = App.useApp();
@@ -41,7 +41,7 @@ const AdminUserIndex = ({ auth }: PageProps) => {
     const [errors, setErrors] = useState<any>({});
 
     const [id, setId] = useState(0);
-	
+
 
 	interface PaginateResponse {
 		data: User[],
@@ -82,12 +82,10 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 			const response = await axios.get<User>(`/admin/users/${dataId}`);
 			form.setFields([
 				{ name: 'username', value: response.data.username },
-				{ name: 'lastname', value: response.data.lastname },
-				{ name: 'firstname', value: response.data.firstname },
-				{ name: 'middlename', value: response.data.middlename },
+				{ name: 'lname', value: response.data.lname },
+				{ name: 'fname', value: response.data.fname },
+				{ name: 'mname', value: response.data.mname },
 				{ name: 'email', value: response.data.email },
-				{ name: 'sex', value: response.data.sex },
-				{ name: 'bio', value: response.data.bio },
 				{ name: 'role', value: response.data.role }
 			]);
 		}catch(err){
@@ -112,7 +110,7 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 			loadDataAsync()
 		}
 	}
-	
+
 
 	const onFinish = async (values:User) =>{
 
@@ -126,7 +124,7 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 				}
 			}catch(err:any){
 				if(err.response.status === 422){
-	
+
 				}
 			}
 		}else{
@@ -139,7 +137,7 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 				}
 			}catch(err:any){
 				if(err.response.status === 422){
-	
+
 				}
 			}
 		}
@@ -166,9 +164,9 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 
 							<Column title="Id" dataIndex="id" key="id"/>
 							<Column title="Username" dataIndex="username" key="username"/>
-							<Column title="Last Name" key="lastname" dataIndex="lastname"/>
-							<Column title="First Name" key="firstname" dataIndex="firstname"/>
-							<Column title="Middle Name" key="middlename" dataIndex="middlename"/>
+							<Column title="Last Name" key="lname" dataIndex="lname"/>
+							<Column title="First Name" key="fname" dataIndex="fname"/>
+							<Column title="Middle Name" key="mname" dataIndex="mname"/>
 							<Column title="Email" dataIndex="email" key="email"/>
 							<Column title="Role" dataIndex="role" key="role"/>
 							{/* <Column title="Active" dataIndex="active" key="active" render={(_, active)=>(
@@ -178,10 +176,10 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 									<span className='bg-red-600 font-bold text-white text-[10px] px-2 py-1 rounded-full'>NO</span>
 								)
 							)}/> */}
-							<Column title="Action" key="action" 
+							<Column title="Action" key="action"
 								render={(_, data:User) => (
 									<Space size="small">
-										<Button shape="circle" icon={<EditOutlined/>} 
+										<Button shape="circle" icon={<EditOutlined/>}
 											onClick={ ()=> handleEditClick(data.id) } />
 										<ChangePassword data={data} onSuccess={loadDataAsync}/>
 									</Space>
@@ -189,17 +187,17 @@ const AdminUserIndex = ({ auth }: PageProps) => {
 							/>
 						</Table>
 
-						<Pagination className='mt-4' 
+						<Pagination className='mt-4'
 							onChange={onPageChange}
-							defaultCurrent={1} 
+							defaultCurrent={1}
 							total={total} />
 
 						<div className='flex flex-end mt-2'>
-							<Button className='ml-auto' 
-								icon={<FileAddOutlined />} 
+							<Button className='ml-auto'
+								icon={<FileAddOutlined />}
 								type="primary" onClick={handClickNew}>
 								New
-							</Button>     
+							</Button>
 						</div>
 					</div>
 				</div>
@@ -299,28 +297,28 @@ const AdminUserIndex = ({ auth }: PageProps) => {
                 )}
 
                 <Form.Item
-                    name="lastname"
+                    name="lname"
                     label="Last Name"
-                    validateStatus={errors.lastname ? "error" : ""}
-                    help={errors.lastname ? errors.lastname[0] : ""}
+                    validateStatus={errors.lname ? "error" : ""}
+                    help={errors.lname ? errors.lname[0] : ""}
                 >
                     <Input placeholder="Last Name" />
                 </Form.Item>
 
                 <Form.Item
-                    name="firstname"
+                    name="fname"
                     label="First Name"
-                    validateStatus={errors.firstname ? "error" : ""}
-                    help={errors.firstname ? errors.firstname[0] : ""}
+                    validateStatus={errors.fname ? "error" : ""}
+                    help={errors.fname ? errors.fname[0] : ""}
                 >
                     <Input placeholder="First Name" />
                 </Form.Item>
 
                 <Form.Item
-                    name="middlename"
+                    name="mname"
                     label="Middle Name"
-                    validateStatus={errors.middlename ? "error" : ""}
-                    help={errors.middlename ? errors.middlename[0] : ""}
+                    validateStatus={errors.mname ? "error" : ""}
+                    help={errors.mname ? errors.mname[0] : ""}
                 >
                     <Input placeholder="FiMiddlerst Name" />
                 </Form.Item>
@@ -334,48 +332,20 @@ const AdminUserIndex = ({ auth }: PageProps) => {
                     <Input placeholder="Email" />
                 </Form.Item>
 
-				<Form.Item
-                    name="bio"
-                    label="Bio"
-                 
-                    validateStatus={errors.bio ? "error" : ""}
-                    help={errors.bio ? errors.bio[0] : ""}
+                 <Form.Item
+                    name="role"
+                    label="Role"
+                    className="w-full"
+                    validateStatus={errors.role ? "error" : ""}
+                    help={errors.role ? errors.role[0] : ""}
                 >
-                    <Input.TextArea rows={6} placeholder="Bio" />
+                    <Select
+                        options={[
+                            { value: "staff", label: "STAFF" },
+                            { value: "admin", label: "ADMINISTRATOR" },
+                        ]}
+                    />
                 </Form.Item>
-
-                <div className="flex gap-4">
-                    <Form.Item
-                        name="sex"
-                        label="Sex"
-                        className="w-full"
-                        validateStatus={errors.sex ? "error" : ""}
-                        help={errors.sex ? errors.sex[0] : ""}
-                    >
-                        <Select
-                            options={[
-                                { value: "MALE", label: "MALE" },
-                                { value: "FEMALE", label: "FEMALE" },
-                            ]}
-                        />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="role"
-                        label="Role"
-                        className="w-full"
-                        validateStatus={errors.role ? "error" : ""}
-                        help={errors.role ? errors.role[0] : ""}
-                    >
-                        <Select
-                            options={[
-                                { value: "author", label: "AUTHOR" },
-                                { value: "publisher", label: "PUBLISHER" },
-                                { value: "admin", label: "ADMINISTRATOR" },
-                            ]}
-                        />
-                    </Form.Item>
-                </div>
 
             </Modal>
 

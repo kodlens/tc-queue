@@ -45,7 +45,7 @@ export default function Login() {
 
         <div className='bg-white p-6 shadow-lg rounded-md w-full m-3 sm:w-[400px]'>
           <div className='mb-5'>
-            <ApplicationLogo></ApplicationLogo>
+            {/* <ApplicationLogo></ApplicationLogo> */}
           </div>
 
           <div className='font-bold text-xl mb-7 text-center'>SIGN IN TO YOUR ACCOUNT</div>

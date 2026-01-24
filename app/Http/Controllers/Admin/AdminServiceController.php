@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AdminServiceController extends Controller
 {
@@ -36,7 +38,7 @@ class AdminServiceController extends Controller
         ]);
 
         Service::create([
-            'name' => ucfirst($req->title),
+            'name' => ucfirst($req->name),
             'description' => $req->description,
             'active' => $req->active ? 1: 0
         ]);
@@ -51,12 +53,11 @@ class AdminServiceController extends Controller
     public function update(Request $req, $id){
 
         $req->validate([
-            'title' => ['required', 'unique:categories,title,' . $id . ',id'],
+            'name' => ['required', 'unique:services,name,' . $id . ',id'],
         ]);
 
-        $data = Category::find($id);
-        $data->title = ucfirst($req->title);
-        $data->slug = Str::slug($req->title);
+        $data = Service::find($id);
+        $data->name = ucfirst($req->name);
         $data->description = $req->description;
         $data->active = $req->active ? 1: 0;
         $data->save();
@@ -67,7 +68,7 @@ class AdminServiceController extends Controller
     }
 
     public function destroy($id){
-        $data = Category::destroy($id);
+        $data = Service::destroy($id);
 
         return response()->json([
             'status' => 'deleted'

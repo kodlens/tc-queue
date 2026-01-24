@@ -10,7 +10,7 @@ export interface User {
     email: string;
     email_verified_at: string;
     active: boolean;
-	  role: string;
+    role: string;
 }
 
 
@@ -25,8 +25,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
 };
 
 
-
-
+// cateogires
 export interface Service {
 	data(data: any): unknown;
     id: number;
@@ -38,6 +37,14 @@ export interface Service {
 }
 
 
+
+export interface Template {
+	data(data: any): unknown;
+    id: number;
+    template:string;
+    created_at:Date;
+    updated_at:Date;
+}
 
 export interface PaginateResponse {
     data: any[];

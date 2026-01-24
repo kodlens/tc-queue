@@ -1,5 +1,5 @@
 import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { Category, PageProps, User } from '@/types'
+import { Service, PageProps, User } from '@/types'
 import { Head } from '@inertiajs/react'
 
 import { FileAddOutlined,
@@ -12,10 +12,11 @@ import { Card, Space, Table, Modal,
 	App} from 'antd';
 
 
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout';
 import CardTitle from '@/Components/CardTitle';
+import { useQuery } from '@tanstack/react-query';
 
 const { Column } = Table;
 const { Search } = Input;
@@ -25,10 +26,6 @@ const AdminServiceIndex = () => {
 	const [form] = Form.useForm();
 
 	const { notification, modal } = App.useApp();
-
-    const [data, setData] = useState<Category[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [total, setTotal] = useState(0);
 
     const [open, setOpen] = useState(false); //for modal
 
@@ -41,47 +38,33 @@ const AdminServiceIndex = () => {
 
     const [id, setId] = useState(0);
 
-	interface CategoryResponse {
-		data: any[];
-		total: number;
-	}
 
-	const loadAsync = async () => {
 
-        setLoading(true)
-        const params = [
-			`search=${search}`,
-            `perpage=${perPage}`,
-            `sort_by=${sortBy}`,
-            `page=${page}`
-        ].join('&');
-
-		try{
-			const res = await axios.get<CategoryResponse>(`/admin/get-categories?${params}`);
-			setData(res.data.data)
-			setTotal(res.data.total)
-			setLoading(false)
-		}catch(err){
-			setLoading(false)
-		}
-    }
-
-    useEffect(()=>{
-        loadAsync()
-    },[page])
+    const  { data, isFetching, error, refetch } = useQuery({
+        queryKey: ['categories', page, perPage, sortBy],
+        queryFn: async () => {
+            const params = new URLSearchParams({
+                perpage: perPage.toString(),
+                search: search.toString(),
+                page: page.toString(),
+                sort_by: sortBy.toString(),
+            });
+            const res = await axios.get(`/admin/get-services?${params}`)
+            return res.data
+        }
+    })
 
 
     const onPageChange = (index:number, perPage:number) => {
         setPage(index)
-        setPerPage(perPage)
     }
 
 
 	const getData = async (id:number) => {
 		try{
-			const res = await axios.get<Category>(`/admin/categories/${id}`);
+			const res = await axios.get(`/admin/services/${id}`);
 			form.setFields([
-				{ name: 'title', value: res.data.title },
+				{ name: 'name', value: res.data.name },
 				{ name: 'description', value: res.data.description },
 				{ name: 'active', value: res.data.active ? true : false },
 			]);
@@ -105,30 +88,30 @@ const AdminServiceIndex = () => {
 	}
 
 	const handleDeleteClick = async (id:number) => {
-		const res = await axios.delete('/admin/categories/' + id);
+		const res = await axios.delete('/admin/services/' + id);
 		if(res.data.status === 'deleted'){
-			notification.info({
+			notification.success({
 				message: 'Deleted!',
-				description:'Category successfully deleted.',
+				description:'Service successfully deleted.',
 				placement: 'bottomRight'
 			})
-			loadAsync()
+			refetch()
 		}
 	}
 
-	const onFinish = async (values:Category) =>{
+	const onFinish = async (values:Service) =>{
 
 		if(id > 0){
 			try{
-				const res = await axios.put('/admin/categories/' + id, values)
+				const res = await axios.put('/admin/services/' + id, values)
 				if(res.data.status === 'updated'){
-					notification.info({
+					notification.success({
 						message: 'Updated!',
-						description:'Category successfully update.',
+						description:'Service successfully update.',
 						placement: 'bottomRight'
 					})
 					setOpen(false)
-					loadAsync()
+					refetch()
 				}
 			}catch(err:any){
 				if(err.response.status === 422){
@@ -137,15 +120,15 @@ const AdminServiceIndex = () => {
 			}
 		}else{
 			try{
-				const res = await axios.post('/admin/categories', values)
+				const res = await axios.post('/admin/services', values)
 				if(res.data.status === 'saved'){
-					notification.info({
+					notification.success({
 						message: 'Saved!',
-						description:'Category successfully save.',
+						description:'Service successfully save.',
 						placement: 'bottomRight'
 					})
 					setOpen(false)
-					loadAsync()
+					refetch()
 				}
 			}catch(err:any){
 				if(err.response.status === 422){
@@ -154,13 +137,11 @@ const AdminServiceIndex = () => {
 				}
 			}
 		}
-
-		//throw new Error('Function not implemented.');
 	}
 
 	return (
 		<>
-			<Head title="Category Management"></Head>
+			<Head title="Services Management"></Head>
 
 			<div className='flex mt-10 justify-center items-center'>
 
@@ -169,7 +150,7 @@ const AdminServiceIndex = () => {
 					md:w-[900px]
 					sm:w-[740px]'>
 					{/* card header */}
-					<CardTitle title={'LIST OF CATEGORIES'} />
+					<CardTitle title={'LIST OF SERVICES'} />
 					{/* card body */}
 					<div>
 						<div className='mb-2'>
@@ -179,8 +160,8 @@ const AdminServiceIndex = () => {
 								size="large"
 								id="search"
 								onChange={(e) => setSearch(e.target.value)}
-								loading={loading}
-								onSearch={loadAsync} />
+								loading={isFetching}
+								onSearch={()=>refetch()} />
 						</div>
 						<div className='flex flex-end my-4'>
 							<Button className='ml-auto'
@@ -189,15 +170,14 @@ const AdminServiceIndex = () => {
 								New
 							</Button>
 						</div>
-						<Table dataSource={data}
-							loading={loading}
+						<Table dataSource={data ? data?.data : []}
+							loading={isFetching}
 							rowKey={(data) => data.id}
 							pagination={false}>
 
 							<Column title="Id" dataIndex="id"/>
-							<Column title="Category" dataIndex="title" key="title"/>
+							<Column title="Service" dataIndex="name" key="name"/>
 							<Column title="Description" dataIndex="description" key="description"/>
-							<Column title="Slug" dataIndex="slug" key="slug"/>
 							<Column title="Active" dataIndex="active" key="active" render={(active)=>(
 								active ? (
 									<span className='bg-green-600 font-bold text-white text-[10px] px-2 py-1 rounded-full'>YES</span>
@@ -207,13 +187,13 @@ const AdminServiceIndex = () => {
 							)}/>
 
 							<Column title="Action" key="action"
-								render={(_, data:Category) => (
+								render={(_, data:Service) => (
 									<Space size="small">
 
-										<Button shape="circle"
+										<Button
 											icon={<EditOutlined/>} onClick={ ()=> handleEditClick(data.id) } />
 
-										<Button danger shape="circle"
+										<Button danger
 											onClick={()=> (
 												modal.confirm({
 													title: 'Delete?',
@@ -235,7 +215,7 @@ const AdminServiceIndex = () => {
 						<Pagination className='mt-4'
 							onChange={onPageChange}
 							defaultCurrent={1}
-							total={total} />
+							total={data?.total} />
 
 					</div>
 				</div>
@@ -247,7 +227,7 @@ const AdminServiceIndex = () => {
 			{/* Modal with Cancel and Save button*/}
 			<Modal
                 open={open}
-                title="CATEGORY INFORMATION"
+                title="SERVICE INFORMATION"
                 okText="Save"
                 cancelText="Cancel"
                 okButtonProps={{
@@ -255,7 +235,7 @@ const AdminServiceIndex = () => {
                     htmlType: 'submit',
                 }}
                 onCancel={() => setOpen(false)}
-                destroyOnClose
+                destroyOnHidden
                 modalRender={(dom) => (
                     <Form
                         layout="vertical"
@@ -263,7 +243,7 @@ const AdminServiceIndex = () => {
                         name="form_in_modal"
 						autoComplete='off'
                         initialValues={{
-							title: '',
+							name: '',
 							description: '',
                             active: true,
                         }}
@@ -275,12 +255,12 @@ const AdminServiceIndex = () => {
                 )}
             >
                 <Form.Item
-                    name="title"
-                    label="Category"
-                    validateStatus={errors.title ? 'error' : ''}
-                    help={errors.title ? errors.title[0] : ''}
+                    name="name"
+                    label="Service Name"
+                    validateStatus={errors.name ? 'error' : ''}
+                    help={errors.name ? errors.name[0] : ''}
                 >
-                    <Input placeholder="Category"/>
+                    <Input placeholder="Service Name"/>
                 </Form.Item>
 
 				<Form.Item
@@ -305,5 +285,5 @@ const AdminServiceIndex = () => {
 	)
 }
 
-AdminCategoryIndex.layout = (page:any) => <AdminLayout user={page.props.auth.user}>{page}</AdminLayout>
-export default AdminCategoryIndex;
+AdminServiceIndex.layout = (page:any) => <AdminLayout user={page.props.auth.user}>{page}</AdminLayout>
+export default AdminServiceIndex;
