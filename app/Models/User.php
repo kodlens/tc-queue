@@ -16,16 +16,14 @@ class User extends Authenticatable
     //protected $primaryKey = 'user_id';
     protected $fillable = [
         'username',
-        'firstname',
-        'lastname',
-        'middlename',
+        'lname',
+        'fname',
+        'mname',
         'email',
         'password',
-        'role_id',
-        'bio',
-        'contact',
+        'active',
         'role'
-       
+
     ];
 
     protected $hidden = [
@@ -62,5 +60,9 @@ class User extends Authenticatable
 
     public function role(){
         return $this->belongsTo(Role::class);
+    }
+
+    public function services(){
+        return $this->hasMany(UserService::class);
     }
 }

@@ -1,18 +1,25 @@
-import { App, Button, Checkbox, Form, Input, Modal } from 'antd'
-import React, { useState } from 'react'
+import { App, Form, Input, Modal } from 'antd'
+import { useState } from 'react'
 
-import { EyeTwoTone, EyeInvisibleOutlined, LockOutlined } from '@ant-design/icons';
+import { EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons';
 import { User } from '@/types';
 import axios from 'axios';
 
-export default function ChangePassword({data, onSuccess} : {data:User, onSuccess:any} ) {
+interface Props {
+  data: User;
+  open: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
 
-    const [open, setOpen] = useState(false)
+export default function ChangePassword({data, onSuccess, open, onClose } : Props ) {
+
+    //const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState<any>({})
     const [form] = Form.useForm();
     const { notification, } = App.useApp();
-        
+
     function onFinish(values: any): void {
         setLoading(true)
         axios.post('/admin/change-password/' + data.id, values)
@@ -20,7 +27,7 @@ export default function ChangePassword({data, onSuccess} : {data:User, onSuccess
             if(res.data.status === 'changed'){
                 notification.info({message:"Password changed successfully.", duration: 2, showProgress: true})
                 onSuccess()
-                setOpen(false)
+                form.resetFields()
             }
             setLoading(false)
 
@@ -34,10 +41,6 @@ export default function ChangePassword({data, onSuccess} : {data:User, onSuccess
 
     return (
         <>
-            <Button shape="circle"
-                loading={loading}
-                onClick={()=> setOpen(true)}
-            icon={<LockOutlined/>} />
 
             <Modal
                 open={open}
@@ -47,9 +50,10 @@ export default function ChangePassword({data, onSuccess} : {data:User, onSuccess
                 okButtonProps={{
                     autoFocus: true,
                     htmlType: 'submit',
+                    loading: loading
                 }}
-                onCancel={() => setOpen(false)}
-                destroyOnClose
+                onCancel={() => onClose()}
+                destroyOnHidden
                 modalRender={(dom) => (
                     <Form
                         layout="vertical"
@@ -72,9 +76,9 @@ export default function ChangePassword({data, onSuccess} : {data:User, onSuccess
                         label="New Password"
                         validateStatus={errors.password ? 'error' : ''}
                         help={errors.password ? errors.password[0] : ''}
-                        
+
                     >
-						<Input.Password iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
+						<Input.Password iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
 							placeholder="New Password"/>
 					</Form.Item>
 
@@ -84,7 +88,7 @@ export default function ChangePassword({data, onSuccess} : {data:User, onSuccess
 						validateStatus={errors.password_confirmation ? 'error' : ''}
 						help={errors.password_confirmation ? errors.password_confirmation[0] : ''}
 					>
-						<Input.Password iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} 
+						<Input.Password iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
 							placeholder="Re-type Password"/>
 					</Form.Item>
             </Modal>

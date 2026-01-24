@@ -23,11 +23,11 @@ class AdminServiceController extends Controller
 
 
     public function getData(Request $req){
-        $sort = explode('.', $req->sort_by);
+        //$sort = explode('.', $req->sort_by);
 
         $data = Service::where('name', 'like', $req->search . '%')
-            ->orderBy($sort[0], $sort[1])
-            ->paginate($req->perpage);
+            ->orderBy('id', 'desc')
+            ->paginate(10);
         return $data;
     }
 

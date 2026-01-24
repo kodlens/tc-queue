@@ -1,13 +1,12 @@
-import { PageProps, User } from '@/types'
+import { User } from '@/types'
 import { Head } from '@inertiajs/react'
 
-import { FileAddOutlined, EditOutlined,
-	EyeInvisibleOutlined,EyeTwoTone} from '@ant-design/icons';
+import { FileAddOutlined, EditOutlined } from '@ant-design/icons';
 
 import { Space, Table,
-    Pagination, Button, Modal,
-    Form, Input, Select,
-	App } from 'antd';
+    Pagination, Button,
+    MenuProps,
+    Dropdown} from 'antd';
 
 
 import { useEffect, useState } from 'react'
@@ -15,50 +14,84 @@ import axios from 'axios';
 import ChangePassword from './partials/ChangePassword';
 import AdminLayout from '@/Layouts/AdminLayout';
 import CardTitle from '@/Components/CardTitle';
+import { ArrowBigRight, KeySquare } from 'lucide-react';
+import { ModalUserAddEdit } from './partials/ModalUserAddEdit';
+import ModalRoleService from './partials/ModalRoleService';
 
 const { Column } = Table;
 
+interface PaginateResponse {
+    data: User[],
+    total: number;
+}
 
 const AdminUserIndex = () => {
-
-	const [form] = Form.useForm();
-
-	const  { notification } = App.useApp();
 
     const [data, setData] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
     const [total, setTotal] = useState(0);
 
-    const [open, setOpen] = useState(false); //for modal
+    const [userOpen, setUserOpen] = useState(false); //for modal
+    const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+    const [roleServiceOpen, setRoleServiceOpen] = useState(false);
 
 	const [perPage, setPerPage] = useState(10);
     const [page, setPage] = useState(1);
-    const [errors, setErrors] = useState<Record<string, string>>({});
-
-    const [id, setId] = useState(0);
+    const [user, setUser] = useState<User>({} as User);
 
 
-	interface PaginateResponse {
-		data: User[],
-		total: number;
+
+    const createMenuItems = ( userData:User) => {
+
+		const items: MenuProps['items'] = [];
+
+		items.push({
+			label: 'Edit',
+			key: 'admin.posts-edit',
+			icon: <EditOutlined />,
+			onClick: () => handleEditClick(userData),
+		},
+    {
+			label: 'Change Password',
+			key: 'admin.users.change-password',
+			icon: <KeySquare size={14}/>,
+			onClick: () => {
+          setUser(user)
+          setChangePasswordOpen(true)
+      },
+    },
+    {
+			label: 'Assign Services',
+			key: 'admin.users.assign-services',
+			icon: <ArrowBigRight size={14}/>,
+			onClick: () => {
+        setUser(user)
+        setRoleServiceOpen(true)
+      },
+    },
+    );
+
+		return items;
 	}
+
+
 
 	const loadDataAsync = async () => {
 
-        setLoading(true)
-        const params = [
-            `perpage=${perPage}`,
-            `page=${page}`
-        ].join('&');
+    setLoading(true)
+    const params = [
+        `perpage=${perPage}`,
+        `page=${page}`
+    ].join('&');
 
 		try{
 			const res = await axios.get<PaginateResponse>(`/admin/get-users?${params}`);
-			setData(res.data.data)
-			setTotal(res.data.total)
-			setLoading(false)
-		}catch(err){
-			console.log(err)
-		}
+        setData(res.data.data)
+        setTotal(res.data.total)
+        setLoading(false)
+      }catch(err){
+        console.log(err)
+      }
     }
 
     useEffect(()=>{
@@ -67,76 +100,29 @@ const AdminUserIndex = () => {
 
 
     const onPageChange = (index:number, perPage:number) => {
-        setPage(index)
-        setPerPage(perPage)
+      setPage(index)
+      setPerPage(perPage)
     }
 
 
-	const getUser = async (dataId:number) => {
-		try{
-			const response = await axios.get<User>(`/admin/users/${dataId}`);
-			form.setFields([
-				{ name: 'username', value: response.data.username },
-				{ name: 'lname', value: response.data.lname },
-				{ name: 'fname', value: response.data.fname },
-				{ name: 'mname', value: response.data.mname },
-				{ name: 'email', value: response.data.email },
-				{ name: 'role', value: response.data.role }
-			]);
-		}catch(err){
-		}
-    }
 
 	const handClickNew = () => {
-        //router.visit('/');
-		setId(0)
-        setOpen(true)
-    }
+		setUser({} as User)
+    setUserOpen(true)
+  }
 
-	const handleEditClick = (id:number) => {
-		setId(id);
-        setOpen(true);
-        getUser(id);
+	const handleEditClick = ( nUser:User) => {
+    setUser(nUser);
+    setUserOpen(true)
 	}
 
-	const handleDeleteClick = async (id:number) => {
-		const res = await axios.delete('/admin/users/{id}');
-		if(res.data.status === 'deleted'){
-			loadDataAsync()
-		}
-	}
+	// const handleDeleteClick = async (id:number) => {
+	// 	const res = await axios.delete('/admin/users/{id}');
+	// 	if(res.data.status === 'deleted'){
+	// 		loadDataAsync()
+	// 	}
+	// }
 
-
-	const onFinish = async (values:User) =>{
-
-		if(id > 0){
-			try{
-				const res = await axios.put('/admin/users/' + id, values)
-				if(res.data.status === 'updated'){
-					notification.info({ placement: 'bottomRight', message: 'Updated!', description: 'User successfully updated.'})
-					setOpen(false)
-					loadDataAsync()
-				}
-			}catch(err:any){
-				if(err.response.status === 422){
-                    setErrors(err.response.data.errors)
-				}
-			}
-		}else{
-			try{
-				const res = await axios.post('/admin/users', values)
-				if(res.data.status === 'saved'){
-					notification.info({ placement: 'bottomRight', message: 'Saved!', description: 'User successfully saved.'})
-					setOpen(false)
-					loadDataAsync()
-				}
-			}catch(err:any){
-				if(err.response.status === 422){
-                    setErrors(err.response.data.errors)
-				}
-			}
-		}
-	}
 
 	return (
 		<>
@@ -153,6 +139,7 @@ const AdminUserIndex = () => {
 					{/* card body */}
 					<div>
 						<Table dataSource={data}
+                            className='overflow-auto'
 							loading={loading}
 							rowKey={(data) => data.id}
 							pagination={false}>
@@ -172,11 +159,23 @@ const AdminUserIndex = () => {
 								)
 							)}/> */}
 							<Column title="Action" key="action"
-								render={(_, data:User) => (
-									<Space size="small">
-										<Button shape="circle" icon={<EditOutlined/>}
-											onClick={ ()=> handleEditClick(data.id) } />
-										<ChangePassword data={data} onSuccess={loadDataAsync}/>
+								render={(_, user:User) => (
+									// <Space size="small">
+									// 	<Button type='text' icon={<EditOutlined/>}
+									// 		onClick={ ()=> handleEditClick(data.id) } />
+                                    //     <ModalRoleService user={data} onSuccess={loadDataAsync}/>
+									// 	<ChangePassword data={data} onSuccess={loadDataAsync}/>
+									// </Space>
+                                    <Space size="small">
+										<Dropdown  trigger={['click']}
+											menu={{items: createMenuItems(user) }} >
+											<Button >
+												<Space>
+												...
+												</Space>
+											</Button>
+
+										</Dropdown>
 									</Space>
 								)}
 							/>
@@ -199,151 +198,40 @@ const AdminUserIndex = () => {
 				{/* card */}
 			</div>
 
+            <ModalUserAddEdit
+                user={user}
+                open={userOpen}
+                onClose={()=>{
+                    setUserOpen(false)
+                }} onSuccess={()=>{
+                    setUserOpen(false)
+                    loadDataAsync()
+                }}/>
 
-			{/* Modal */}
-            <Modal
-                open={open}
-                title="USER INFORMATION"
-                okText="Save"
-                cancelText="Cancel"
-                okButtonProps={{
-                    autoFocus: true,
-                    htmlType: "submit",
+
+            <ChangePassword data={user}
+                open={changePasswordOpen}
+                onClose={() => {
+                    setChangePasswordOpen(false);
                 }}
-                onCancel={() => setOpen(false)}
-                destroyOnHidden
-                modalRender={(dom) => (
-                    <Form
-                        layout="vertical"
-                        form={form}
-                        name="form_in_modal"
-                        autoComplete="off"
-                        initialValues={{
-                            username: '',
-                            password: '',
-                            email: '',
-                            lname: '',
-                            fname: '',
-                            mname: '',
-                            role: '',
-                            active: true,
-                        }}
-                        clearOnDestroy
-                        onFinish={(values) => onFinish(values)}
-                    >
-                        {dom}
-                    </Form>
-                )}
-            >
-                <Form.Item
-                    name="username"
-                    label="Username"
-                    validateStatus={errors.username ? "error" : ""}
-                    help={errors.username ? errors.username[0] : ""}
-                >
-                    <Input placeholder="Username" />
-                </Form.Item>
+                onSuccess={() => {
+                    setChangePasswordOpen(false);
+                }}
+            />
 
-                {id < 1 ? (
-                    <>
-                        <Form.Item
-                            name="password"
-                            label="Password"
-                            validateStatus={errors.password ? "error" : ""}
-                            help={errors.password ? errors.password[0] : ""}
-                        >
-                            <Input.Password
-                                iconRender={(visible) =>
-                                    visible ? (
-                                        <EyeTwoTone />
-                                    ) : (
-                                        <EyeInvisibleOutlined />
-                                    )
-                                }
-                                placeholder="Re-type Password"
-                            />
-                        </Form.Item>
+            <ModalRoleService
+                user={user}
+                open={roleServiceOpen}
+                onClose={() => {
+                    setRoleServiceOpen(false);
+                }}
+                onSuccess={() => {
+                    setRoleServiceOpen(false);
+                    loadDataAsync()
+                }}
+            />
 
-                        <Form.Item
-                            name="password_confirmation"
-                            label="Re-type Password"
-                            validateStatus={
-                                errors.password_confirmation ? "error" : ""
-                            }
-                            help={
-                                errors.password_confirmation
-                                    ? errors.password_confirmation[0]
-                                    : ""
-                            }
-                        >
-                            <Input.Password
-                                iconRender={(visible) =>
-                                    visible ? (
-                                        <EyeTwoTone />
-                                    ) : (
-                                        <EyeInvisibleOutlined />
-                                    )
-                                }
-                                placeholder="Re-type Password"
-                            />
-                        </Form.Item>
-                    </>
-                ) : (
-                    ""
-                )}
-
-                <Form.Item
-                    name="lname"
-                    label="Last Name"
-                    validateStatus={errors.lname ? "error" : ""}
-                    help={errors.lname ? errors.lname[0] : ""}
-                >
-                    <Input placeholder="Last Name" />
-                </Form.Item>
-
-                <Form.Item
-                    name="fname"
-                    label="First Name"
-                    validateStatus={errors.fname ? "error" : ""}
-                    help={errors.fname ? errors.fname[0] : ""}
-                >
-                    <Input placeholder="First Name" />
-                </Form.Item>
-
-                <Form.Item
-                    name="mname"
-                    label="Middle Name"
-                    validateStatus={errors.mname ? "error" : ""}
-                    help={errors.mname ? errors.mname[0] : ""}
-                >
-                    <Input placeholder="FiMiddlerst Name" />
-                </Form.Item>
-
-                <Form.Item
-                    name="email"
-                    label="Email"
-                    validateStatus={errors.email ? "error" : ""}
-                    help={errors.email ? errors.email[0] : ""}
-                >
-                    <Input placeholder="Email" />
-                </Form.Item>
-
-                 <Form.Item
-                    name="role"
-                    label="Role"
-                    className="w-full"
-                    validateStatus={errors.role ? "error" : ""}
-                    help={errors.role ? errors.role[0] : ""}
-                >
-                    <Select
-                        options={[
-                            { value: "staff", label: "STAFF" },
-                            { value: "admin", label: "ADMINISTRATOR" },
-                        ]}
-                    />
-                </Form.Item>
-            </Modal>
-		</>
+        </>
 	)
 }
 
