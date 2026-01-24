@@ -44,106 +44,106 @@ export default function AdminLayout(
             icon: <DashboardOutlined />,
             label: 'Dashboard',
             onClick: () => router.visit('/admin/dashboard')
+    },
+        {
+            key: 'admin.services',
+            icon: <ProfileOutlined />,
+            label: 'Services',
+            onClick: () => router.visit('/admin/services')
+
         },
-            {
-                key: 'admin.sections',
-                icon: <ProfileOutlined />,
-                label: 'Sections',
-                onClick: () => router.visit('/admin/sections')
+        {
+            key: 'admin.categories',
+            icon: <BarsOutlined />,
+            label: 'Categories',
+            onClick: () => router.visit('/admin/categories')
+        },
+        {
+            type: 'divider',
+        },
+        {
+            key: 'page-sections',
+            icon: <FilePptOutlined />,
+            label: 'Page Sections',
+            // onClick: () => router.visit('/admin/pages')
+            children: [
+                {
+                    key: 'admin.page-sections.banners',
+                    label: 'Banners',
+                    onClick: () => router.visit('/admin/page-sections/banners'),
+                },
+                {
+                    key: 'admin.page-sections.magazines',
+                    label: 'Magazines',
+                    onClick: () => router.visit('/admin/page-sections/magazines'),
+                },
+                {
+                    key: 'admin.page-sections.dostvs',
+                    label: 'DOSTv',
+                    onClick: () => router.visit('/admin/page-sections/dostvs'),
+                },
+                {
+                    key: 'admin.page-sections.videos',
+                    label: 'Videos',
+                    onClick: () => router.visit('/admin/page-sections/videos'),
+                },
+            ],
+        },
+        {
+            type: 'divider',
+        },
 
-            },
-            {
-                key: 'admin.categories',
-                icon: <BarsOutlined />,
-                label: 'Categories',
-                onClick: () => router.visit('/admin/categories')
-            },
-            {
-                type: 'divider',
-            },
-            {
-                key: 'page-sections',
-                icon: <FilePptOutlined />,
-                label: 'Page Sections',
-                // onClick: () => router.visit('/admin/pages')
-                children: [
-                    {
-                        key: 'admin.page-sections.banners',
-                        label: 'Banners',
-                        onClick: () => router.visit('/admin/page-sections/banners'),
-                    },
-                    {
-                        key: 'admin.page-sections.magazines',
-                        label: 'Magazines',
-                        onClick: () => router.visit('/admin/page-sections/magazines'),
-                    },
-                    {
-                        key: 'admin.page-sections.dostvs',
-                        label: 'DOSTv',
-                        onClick: () => router.visit('/admin/page-sections/dostvs'),
-                    },
-                    {
-                        key: 'admin.page-sections.videos',
-                        label: 'Videos',
-                        onClick: () => router.visit('/admin/page-sections/videos'),
-                    },
-                ],
-            },
-            {
-                type: 'divider',
-            },
+        {
+            key: 'posts',
+            icon: <FormOutlined />,
+            label: 'Posts',
+            children: [
+                {
+                    key: 'admin.posts.articles',
+                    label: 'Article',
+                    onClick: () => router.visit('/admin/posts'),
+                },
+                {
+                    key: 'admin.posts.featureds',
+                    label: 'Featured Post',
+                    onClick: () => router.visit('/admin/post-featured'),
+                },
+                {
+                    key: 'admin.posts.archives',
+                    label: 'Archive',
+                    onClick: () => router.visit('/admin/post-archives'),
+                },
 
-            {
-                key: 'posts',
-                icon: <FormOutlined />,
-                label: 'Posts',
-                children: [
-                    {
-                        key: 'admin.posts.articles',
-                        label: 'Article',
-                        onClick: () => router.visit('/admin/posts'),
-                    },
-                    {
-                        key: 'admin.posts.featureds',
-                        label: 'Featured Post',
-                        onClick: () => router.visit('/admin/post-featured'),
-                    },
-                    {
-                        key: 'admin.posts.archives',
-                        label: 'Archive',
-                        onClick: () => router.visit('/admin/post-archives'),
-                    },
+            ],
+        },
+        {
+            type: 'divider'
+        },
 
-                ],
-            },
-            {
-                type: 'divider'
-            },
-
-            // {
-            //     key: 'roles.index',
-            //     icon: <IdcardOutlined />,
-            //     label: 'Roles',
-            //     onClick: ()=> router.visit('/admin/roles')
-            // },
-            // {
-            //     key: 'permissions.index',
-            //     icon: <HddOutlined />,
-            //     label: 'Permissions',
-            //     onClick: ()=> router.visit('/admin/permissions')
-            // },
-            // {
-            //     key: 'role-has-permissions.index',
-            //     icon: <FileJpgOutlined />,
-            //     label: 'Role Permissions',
-            //     onClick: ()=> router.visit('/admin/role-has-permissions')
-            // },
-            {
-                key: 'admin.users',
-                icon: <UserOutlined />,
-                label: 'Users',
-                onClick: () => router.visit('/admin/users')
-            });
+        // {
+        //     key: 'roles.index',
+        //     icon: <IdcardOutlined />,
+        //     label: 'Roles',
+        //     onClick: ()=> router.visit('/admin/roles')
+        // },
+        // {
+        //     key: 'permissions.index',
+        //     icon: <HddOutlined />,
+        //     label: 'Permissions',
+        //     onClick: ()=> router.visit('/admin/permissions')
+        // },
+        // {
+        //     key: 'role-has-permissions.index',
+        //     icon: <FileJpgOutlined />,
+        //     label: 'Role Permissions',
+        //     onClick: ()=> router.visit('/admin/role-has-permissions')
+        // },
+        {
+            key: 'admin.users',
+            icon: <UserOutlined />,
+            label: 'Users',
+            onClick: () => router.visit('/admin/users')
+        });
 
         // if (paramPermissions.includes('sections.index')) {
         // 	items.push(
@@ -206,7 +206,7 @@ export default function AdminLayout(
                                 //colorBgTextHover : 'red' //bg color when hovering the menu
                                 //colorBgElevated: 'red' //can be use also as bg color in mobile sub link
                                 colorLinkActive: 'red'
-                                
+
                             },
                         }}
                         >
@@ -224,7 +224,7 @@ export default function AdminLayout(
                         />
                     </ConfigProvider>
 
-                    
+
                 </Sider>
                 <Layout>
                     <Header
@@ -243,10 +243,10 @@ export default function AdminLayout(
                                 }}
                             />
                             <div className='ml-auto mr-4 flex items-center gap-4'>
-                                <Link href=''>{user.lastname} {user.firstname[0]}.</Link>
-                                <Button 
-                                    danger 
-                                    onClick={handleLogout} 
+                                <Link href=''>{user.lname} {user.fname[0]}.</Link>
+                                <Button
+                                    danger
+                                    onClick={handleLogout}
                                     icon={<LogOut size={16}/>}>
                                 </Button>
                             </div>

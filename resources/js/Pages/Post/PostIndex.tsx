@@ -1,18 +1,18 @@
 import Authenticated from '@/Layouts/AuthenticatedLayout'
-import { Post, PageProps, User, Status } from '@/types'
+import { PageProps, User, Status } from '@/types'
 import { Head, router } from '@inertiajs/react'
 
-import { FileAddOutlined, DropboxOutlined, 
+import { FileAddOutlined, DropboxOutlined,
 	DownOutlined,
-    DeleteOutlined, EditOutlined, 
+    DeleteOutlined, EditOutlined,
 	EyeOutlined,UserOutlined,
     ProjectOutlined, DeliveredProcedureOutlined, PaperClipOutlined,
 	PicRightOutlined } from '@ant-design/icons';
 
-import { Card, Space, Table, 
+import { Card, Space, Table,
     Pagination, Button, Modal,
     Form, Input, Select, Checkbox,
-    notification, 
+    notification,
 	Dropdown,
 	MenuProps,
 	App} from 'antd';
@@ -44,7 +44,7 @@ const dateFormat = (item:Date):string=> {
 }
 
 export default function PostIndex(
-	{  auth, statuses, permissions } : 
+	{  auth, statuses, permissions } :
 	PageProps) {
 
 	const { modal } = App.useApp();
@@ -59,13 +59,13 @@ export default function PostIndex(
 	const [perPage, setPerPage] = useState(5);
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState('');
-    
+
     const [errors, setErrors] = useState<any>({});
 
 	const createMenuItems = (paramPermissions:string[], data:Post) => {
 
 		const items: MenuProps['items'] = [];
-	  
+
 		// Add 'Edit' if the user has edit permission
 		if (paramPermissions.includes('posts.edit')) {
 			items.push({
@@ -75,7 +75,7 @@ export default function PostIndex(
 				onClick: () => handleEditClick(data.id),
 			});
 		}
-	  
+
 		// Add 'Trash' if the user has trash permission
 		if (paramPermissions.includes('posts.trash')) {
 			items.push({
@@ -105,7 +105,7 @@ export default function PostIndex(
 			});
 		}
 
-		
+
 		if (paramPermissions.includes('posts.pending')) {
 			items.push({
 				label: 'Pending',
@@ -234,17 +234,17 @@ export default function PostIndex(
 	}
 
     useEffect(()=>{
-		
+
 		loadAsync('', perPage, page);
 
-	
+
     },[perPage, page])
 
 
 
     const onPageChange = (index:number, perPage:number) => {
 		console.log(index);
-		
+
         setPage(index)
         setPerPage(perPage)
     }
@@ -263,7 +263,7 @@ export default function PostIndex(
 			return ''
 		}
 	}
-	
+
 
 	const handClickNew = () => {
 		router.visit('/panel/posts/create');
@@ -309,7 +309,7 @@ export default function PostIndex(
 	const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
 		e.currentTarget.src = '/img/no-img.png';
 	}
-	
+
 	return (
 
 		<Authenticated user={auth.user}>
@@ -329,10 +329,10 @@ export default function PostIndex(
 							style={{
 								width: '200px'
 							}}
-							
+
 							defaultValue=""
 							options={[
-								{ label: 'All', value: '' }, 
+								{ label: 'All', value: '' },
 								...statuses.map(status => ({
 
 									label: status.status,
@@ -340,8 +340,8 @@ export default function PostIndex(
 								}))]
 							}
 						/>
-						
-						<Input placeholder="Search Title" 
+
+						<Input placeholder="Search Title"
 							onKeyDown={handleKeyDown}
 							value={search} onChange={ (e) => setSearch(e.target.value)}/>
 						<Button type='primary' onClick={handSearchClick}>SEARCH</Button>
@@ -350,14 +350,14 @@ export default function PostIndex(
 					{
 						permissions.includes('posts.create') && (
 							<div className='flex flex-end my-2'>
-								<Button className='ml-auto' 
-									icon={<FileAddOutlined />} 
+								<Button className='ml-auto'
+									icon={<FileAddOutlined />}
 									type="primary" onClick={handClickNew}>
 									NEW
-								</Button>     
+								</Button>
 							</div>
 						)}
-					
+
 					<div>
 
 						<Table dataSource={data}
@@ -373,19 +373,19 @@ export default function PostIndex(
                             					onError={ handleImageError } />
 										</div>
 									)
-									
+
 								)} />
 
 							<Column title="Id" dataIndex="id"/>
 							<Column title="Title" dataIndex="title" key="title"/>
-							<Column title="Excerpt" 
+							<Column title="Excerpt"
 								dataIndex="excerpt"
 								key="excerpt"
 								render={(excerpt) => (
 									<span>{ excerpt ? truncate(excerpt, 10) : '' }</span>
-								)} 
+								)}
 							/>
-							
+
 							{/* <Column title="Author" dataIndex="author" key="author"
 								render={(author:{author:string}) => {
 									return (
@@ -405,7 +405,7 @@ export default function PostIndex(
 									)
 								}}
 							/>
-						
+
 							<Column title="Status" dataIndex="status" key="status" render={ (status) => {
 								return (
 									<div className={"font-bold text-white text-center text-[10px] px-2 py-1 rounded-full"}
@@ -416,37 +416,37 @@ export default function PostIndex(
 								)
 							}}
 							/>
-							
+
 							<Column title="Featured" dataIndex="is_featured" key="is_featured" render={(is_featured)=>(
-								
+
 								is_featured ? (
 									<span className='bg-green-600 font-bold text-white text-[10px] px-2 py-1 rounded-full'>YES</span>
-									
+
 								) : (
 									<span className='bg-red-600 font-bold text-white text-[10px] px-2 py-1 rounded-full'>NO</span>
 								)
-								
+
 							)}/>
-							<Column title="Action" key="action" 
+							<Column title="Action" key="action"
 								render={(_, data: Post) => (
 									<Space size="small">
 										<Dropdown.Button menu={{items: createMenuItems(permissions, data) }} type='primary'>
 											Options
 										</Dropdown.Button>
-											
+
 									</Space>
 								)}
 							/>
 						</Table>
 
-						<Pagination className='my-10' 
+						<Pagination className='my-10'
 							onChange={onPageChange}
 							defaultCurrent={1}
 							total={total} />
 					</div>
 				</div>
 				{/* card */}
-				
+
 			</div>
 
 		</Authenticated>
