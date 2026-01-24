@@ -4,51 +4,39 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Category;
-use Inertia\Inertia;
-use Inertia\Response;
-use Auth;
-use Illuminate\Support\Str;
+use App\Models\Service;
 
-
-class AdminCategoryController extends Controller
+class AdminServiceController extends Controller
 {
-    //
-    
+
     public function index(){
-       
-        return Inertia::render('Admin/Category/AdminCategoryIndex');
+
+        return Inertia::render('Admin/Service/AdminServiceIndex');
     }
 
 
     public function show($id){
-        return Category::find($id);
+        return Service::find($id);
     }
-
 
 
     public function getData(Request $req){
         $sort = explode('.', $req->sort_by);
 
-        $data = Category::where('title', 'like', $req->search . '%')
+        $data = Service::where('name', 'like', $req->search . '%')
             ->orderBy($sort[0], $sort[1])
             ->paginate($req->perpage);
-
-        // $data = Category::where('title', 'like', $req->title . '%')
-        //     ->get();
-
         return $data;
     }
 
     public function store(Request $req){
-    
+
         $req->validate([
-            'title' => ['required', 'unique:categories'],
+            'name' => ['required', 'unique:services'],
         ]);
 
-        Category::create([
-            'title' => ucfirst($req->title),
-            'slug' => Str::slug($req->title),
+        Service::create([
+            'name' => ucfirst($req->title),
             'description' => $req->description,
             'active' => $req->active ? 1: 0
         ]);
@@ -59,9 +47,9 @@ class AdminCategoryController extends Controller
     }
 
 
-  
+
     public function update(Request $req, $id){
-    
+
         $req->validate([
             'title' => ['required', 'unique:categories,title,' . $id . ',id'],
         ]);
@@ -72,7 +60,7 @@ class AdminCategoryController extends Controller
         $data->description = $req->description;
         $data->active = $req->active ? 1: 0;
         $data->save();
-        
+
         return response()->json([
             'status' => 'updated'
         ], 200);

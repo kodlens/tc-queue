@@ -2,13 +2,13 @@ import Authenticated from '@/Layouts/AuthenticatedLayout'
 import { Category, PageProps, User } from '@/types'
 import { Head } from '@inertiajs/react'
 
-import { FileAddOutlined, 
-    DeleteOutlined, EditOutlined, 
+import { FileAddOutlined,
+    DeleteOutlined, EditOutlined,
     QuestionCircleOutlined } from '@ant-design/icons';
 
 import { Card, Space, Table, Modal,
     Pagination, Button,
-    Form, Input, Select, Checkbox, 
+    Form, Input, Select, Checkbox,
 	App} from 'antd';
 
 
@@ -20,10 +20,10 @@ import CardTitle from '@/Components/CardTitle';
 const { Column } = Table;
 const { Search } = Input;
 
-const AdminCategoryIndex = ({ auth, permissions }: PageProps<{permissions:string[]}>) => {
-	
+const AdminServiceIndex = () => {
+
 	const [form] = Form.useForm();
-	
+
 	const { notification, modal } = App.useApp();
 
     const [data, setData] = useState<Category[]>([]);
@@ -40,7 +40,7 @@ const AdminCategoryIndex = ({ auth, permissions }: PageProps<{permissions:string
     const [sortBy, setSortBy] = useState<any>('id.desc');
 
     const [id, setId] = useState(0);
-		
+
 	interface CategoryResponse {
 		data: any[];
 		total: number;
@@ -117,7 +117,7 @@ const AdminCategoryIndex = ({ auth, permissions }: PageProps<{permissions:string
 	}
 
 	const onFinish = async (values:Category) =>{
-		
+
 		if(id > 0){
 			try{
 				const res = await axios.put('/admin/categories/' + id, values)
@@ -154,7 +154,7 @@ const AdminCategoryIndex = ({ auth, permissions }: PageProps<{permissions:string
 				}
 			}
 		}
-		
+
 		//throw new Error('Function not implemented.');
 	}
 
@@ -173,7 +173,7 @@ const AdminCategoryIndex = ({ auth, permissions }: PageProps<{permissions:string
 					{/* card body */}
 					<div>
 						<div className='mb-2'>
-							<Search placeholder="Search..." 
+							<Search placeholder="Search..."
 								autoComplete='off'
 								enterButton="Search"
 								size="large"
@@ -183,11 +183,11 @@ const AdminCategoryIndex = ({ auth, permissions }: PageProps<{permissions:string
 								onSearch={loadAsync} />
 						</div>
 						<div className='flex flex-end my-4'>
-							<Button className='ml-auto' 
-								icon={<FileAddOutlined />} 
+							<Button className='ml-auto'
+								icon={<FileAddOutlined />}
 								type="primary" onClick={handClickNew}>
 								New
-							</Button>     
+							</Button>
 						</div>
 						<Table dataSource={data}
 							loading={loading}
@@ -205,14 +205,14 @@ const AdminCategoryIndex = ({ auth, permissions }: PageProps<{permissions:string
 									<span className='bg-red-600 font-bold text-white text-[10px] px-2 py-1 rounded-full'>NO</span>
 								)
 							)}/>
-							
-							<Column title="Action" key="action" 
+
+							<Column title="Action" key="action"
 								render={(_, data:Category) => (
 									<Space size="small">
 
-										<Button shape="circle" 
+										<Button shape="circle"
 											icon={<EditOutlined/>} onClick={ ()=> handleEditClick(data.id) } />
-										
+
 										<Button danger shape="circle"
 											onClick={()=> (
 												modal.confirm({
@@ -222,7 +222,7 @@ const AdminCategoryIndex = ({ auth, permissions }: PageProps<{permissions:string
 													okText: 'Yes',
 													cancelText: 'No',
 													onOk() {
-														handleDeleteClick(data.id) 
+														handleDeleteClick(data.id)
 													}
 												})
 											)}
@@ -232,11 +232,11 @@ const AdminCategoryIndex = ({ auth, permissions }: PageProps<{permissions:string
 							/>
 						</Table>
 
-						<Pagination className='mt-4' 
+						<Pagination className='mt-4'
 							onChange={onPageChange}
-							defaultCurrent={1} 
+							defaultCurrent={1}
 							total={total} />
-						
+
 					</div>
 				</div>
 				{/* card */}
@@ -298,7 +298,7 @@ const AdminCategoryIndex = ({ auth, permissions }: PageProps<{permissions:string
                 >
                     <Checkbox>Active</Checkbox>
                 </Form.Item>
-                
+
             </Modal>
 
 		</>

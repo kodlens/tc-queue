@@ -33,8 +33,6 @@ Route::get('/km/login', [App\Http\Controllers\WelcomePageController::class, 'ind
 
 Route::middleware('auth')->group(function () {
 
-    Route::post('/posts-comments/{id}', [App\Http\Controllers\PostCommentController::class, 'postCommentStore'])->name('posts.comments-store');
-    Route::get('/get-posts-comments/{id}', [App\Http\Controllers\PostCommentController::class, 'getComments'])->name('posts.get-comments');
 
     Route::get('/my-account', [App\Http\Controllers\Auth\MyAccountController::class, 'index']);
     Route::patch('/my-account-update', [App\Http\Controllers\Auth\MyAccountController::class, 'update']);
@@ -62,17 +60,9 @@ Route::prefix('admin')->middleware('auth', 'admin')->group(function () {
 
     Route::get('/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('admin.dashboard.index');
 
-    // Route::get('/admin/articles', [App\Http\Controllers\Admin\AdminArticleController::class, 'index'])->name('admin.articles.index');
-    // Route::get('/admin/articles/create', [App\Http\Controllers\Admin\AdminArticleController::class, 'create'])->name('admin.articles.create');
-    // Route::get('/admin/get-articles', [App\Http\Controllers\Admin\AdminArticleController::class, 'create'])->name('admin.articles.create');
 
-    Route::resource('/sections', App\Http\Controllers\Admin\AdminSectionController::class)->names('admin.sections');
-    Route::get('/get-sections', [App\Http\Controllers\Admin\AdminSectionController::class, 'getData'])->name('sections.get-data');
-    Route::get('/load-sections', [App\Http\Controllers\Admin\AdminSectionController::class, 'loadData'])->name('sections.load');
-
-
-    Route::resource('/categories', App\Http\Controllers\Admin\AdminCategoryController::class)->names('admin.categories');
-    Route::get('/get-categories', [App\Http\Controllers\Admin\AdminCategoryController::class, 'getData'])->name('admin.categories-get-data');
+    Route::resource('/services', App\Http\Controllers\Admin\AdminServiceController::class)->names('admin.services');
+    Route::get('/get-services', [App\Http\Controllers\Admin\AdminServiceController::class, 'getData'])->name('admin.services.get-data');
 
 
     Route::resource('/authors', App\Http\Controllers\Admin\AdminAuthorController::class);

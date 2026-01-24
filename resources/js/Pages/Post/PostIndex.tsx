@@ -62,7 +62,7 @@ export default function PostIndex(
 
     const [errors, setErrors] = useState<any>({});
 
-	const createMenuItems = (paramPermissions:string[], data:Post) => {
+	const createMenuItems = (data:Post) => {
 
 		const items: MenuProps['items'] = [];
 
