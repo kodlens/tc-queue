@@ -21,7 +21,8 @@ class AdminUserController extends Controller
 
     public function getData(Request $req){
 
-        return User::where('username', 'like', $req->lname . '%')
+        return User::with('services.service')
+            ->where('username', 'like', $req->lname . '%')
             ->where('lname', 'like', $req->lname . '%')
             ->paginate($req->perpage);
     }
@@ -125,6 +126,16 @@ class AdminUserController extends Controller
 
         return response()->json([
             'status' => 'assigned'
+        ], 200);
+    }
+
+
+    public function unassignService($userId, $serviceId){
+
+        UserService::where('user_id', $userId)->where('service_id', $serviceId)->delete();
+
+        return response()->json([
+            'status' => 'unassigned'
         ], 200);
     }
 }

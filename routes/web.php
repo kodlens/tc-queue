@@ -124,6 +124,7 @@ Route::prefix('admin')->middleware('auth', 'admin')->group(function () {
     Route::post('/users-change-password/{id}', [App\Http\Controllers\Admin\AdminUserController::class, 'changePassword'])->name('users.change-password');
     Route::post('/change-password/{id}', [App\Http\Controllers\Admin\AdminUserController::class, 'changePassword'])->name('users.change-password');
     Route::post('/users-assign-service/{id}', [App\Http\Controllers\Admin\AdminUserController::class, 'assignService'])->name('admin.users.assign-service');
+    Route::delete('/users-unassign-service/{userId}/{serviceId}', [App\Http\Controllers\Admin\AdminUserController::class, 'unassignService'])->name('admin.users.unassign-service');
 
 
 

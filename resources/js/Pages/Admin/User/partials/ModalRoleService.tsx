@@ -38,7 +38,7 @@ export default function ModalRoleService({ user, open, onClose, onSuccess }: Pro
       })
   }
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ['services', search],
     queryFn: async () => {
       const params = new URLSearchParams({
@@ -52,6 +52,15 @@ export default function ModalRoleService({ user, open, onClose, onSuccess }: Pro
     refetchOnWindowFocus: false
   })
 
+  const handleDelete = (id:number) => () => {
+      axios.delete('/admin/users-unassign-service/' + user.id + '/' + id).then(res => {
+        if (res.data.status === 'unassigned') {
+          notification.success({ message: "Service successfully unassigned.", duration: 2, showProgress: true })
+        }
+        refetch();
+      })
+  }
+
   return (
     <>
       <Modal
@@ -62,6 +71,20 @@ export default function ModalRoleService({ user, open, onClose, onSuccess }: Pro
         destroyOnHidden
         footer={null}
       >
+        <div className='my-6'>
+          { Array.isArray(user.services) && (
+            <div className='font-bold'>Assigned Services</div>
+          )}
+          { user.services.length > 0 ? (
+            <>
+              { user.services.map((service:any) => (
+                <div key={service.id} className='flex text-sm p-2 bg-gray-100 m-2'>{ service.service.name }
+                  <Button size='small' className='ml-auto' danger onClick={handleDelete(service.id)}>x</Button>
+                </div>
+              )) }
+            </>
+          ): null}
+        </div>
 
         <Input.Search placeholder="Search"  onSearch={(value) => {
           setSearch(value)

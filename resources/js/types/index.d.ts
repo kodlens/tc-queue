@@ -8,6 +8,7 @@ export interface User {
     fname: string;
     mname: string;
     email: string;
+    services: Service[];
     email_verified_at: string;
     active: boolean;
     role: string;
