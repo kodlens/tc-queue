@@ -33,6 +33,18 @@ export interface Service {
     update_at: Date
 }
 
+export type QueueItem = {
+  id: number
+  queue_number?: string
+  reference_no?: string
+  service?: Service
+  client_name?: string
+  status?: 'waiting' | 'processing' | 'completed'
+  priority?: 'normal' | 'urgent'
+  created_at?: string
+  service_steps?: Step[];
+  current_step?: Step;
+}
 
 export interface Step {
 	data(data: any): unknown;

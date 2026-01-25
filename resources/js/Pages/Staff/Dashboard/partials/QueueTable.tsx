@@ -6,21 +6,11 @@ import { Footprints } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Column from 'antd/es/table/Column'
-import { Step } from '@/types'
+import { QueueItem, Step } from '@/types'
 
-type QueueItem = {
-  id: number
-  reference: string
-  service: string
-  user: string
-  email: string
-  status: 'waiting' | 'processing' | 'completed'
-  priority: 'normal' | 'urgent'
-  created_at: string
-  service_steps: string[]
-}
 
-export default function QueueTable() {
+
+export default function QueueTable() {``
   const [selected, setSelected] = useState<QueueItem | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -34,47 +24,20 @@ export default function QueueTable() {
 
 
 
-  const handleAction = (type: string, record: QueueItem, step?: string) => {
+  const handleAction = (type: string, queue: QueueItem) => {
+    //console.log(queue);
     if (type === 'view') {
-      setSelected(record)
+      setSelected(queue)
       setDrawerOpen(true)
     } else if (type === 'step') {
-      message.info(`Step "${step}" selected for ${record.reference}`)
+      message.info(`Step "${queue.current_step?.name}" selected for ${queue.queue_number}`)
       // Here you can call backend API to update step
     } else if (type === 'processing' || type === 'completed') {
-      message.success(`${type.toUpperCase()} action for ${record.reference}`)
+      message.success(`${type.toUpperCase()} action for ${queue.queue_number}`)
     }
   }
 
-  const columns = [
-    { title: 'Queue #', dataIndex: 'reference', key: 'reference', width: 120 },
-    { title: 'Service', dataIndex: 'service', key: 'service' },
-    { title: 'User', dataIndex: 'user', key: 'user' },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: string) => {
-        const color: Record<string, string> = { waiting: 'default', processing: 'blue', completed: 'green' }
-        return <Tag color={color[status]}>{status.toUpperCase()}</Tag>
-      },
-    },
-    {
-      title: 'Priority',
-      dataIndex: 'priority',
-      key: 'priority',
-      render: (priority: string) => {
-        const color: Record<string, string> = { normal: 'default', urgent: 'red' }
-        return <Tag color={color[priority]}>{priority.toUpperCase()}</Tag>
-      },
-    },
-    {
-      title: 'Actions',
-      key: 'actions',
-      width: 120,
 
-    },
-  ]
 
   return (
     <>
@@ -87,12 +50,34 @@ export default function QueueTable() {
        >
 
         <Column title="Queue #" dataIndex="queue_number" key="queue_number" width={120}/>
-        <Column title="Service" dataIndex="service" key="service"
-        render={(service)=>(
-          <>
-            {service.name}
-          </>
-        )}/>
+        <Column
+          title="Service"
+          dataIndex="service"
+          key="service"
+          render={(_, queue) => (
+            <div className="space-y-2">
+              {/* Service Name */}
+              <div className="text-sm font-semibold text-gray-900">
+                {queue.service?.name}
+              </div>
+
+              {/* Current Step */}
+              <div className="flex items-start gap-2 rounded-md border border-orange-200 bg-orange-50 px-3 py-2">
+                <div className="mt-1 h-2 w-2 rounded-full bg-orange-500" />
+
+                <div>
+                  <div className="text-[11px] font-medium uppercase tracking-wide text-orange-700">
+                    Current Step
+                  </div>
+                  <div className="text-xs font-semibold text-gray-800">
+                    {queue.current_step?.name ?? '—'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        />
+
         <Column title="Client" dataIndex="client_name" key="client_name" />
         <Column
           title="Status"
@@ -134,8 +119,8 @@ export default function QueueTable() {
           title="Actions"
           key="actions"
           width={120}
-          render={(_: any, record: QueueItem) => {
-            console.log(record.service_steps);
+          render={(_, record: QueueItem) => {
+            //console.log(record.service_steps);
 
             const menuItems: MenuProps['items'] = [
               {
@@ -162,10 +147,10 @@ export default function QueueTable() {
                 key: 'set-step',
                 icon: <Footprints size={15} />,
                 label: 'Set Step',
-                children: record.service_steps.map((step:Step, idx:number) => ({
+                children: record.service_steps?.map((step:Step, idx:number) => ({
                   key: `step-${idx}`,
                   label: step?.name,
-                  onClick: () => handleAction('step', record, step),
+                  onClick: () => handleAction('step', record),
                 })),
               },
             ]

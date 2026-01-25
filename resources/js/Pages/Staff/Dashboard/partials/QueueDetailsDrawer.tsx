@@ -15,17 +15,9 @@ import {
 } from '@ant-design/icons'
 import { useState } from 'react'
 import ActionConfirmModal from './ActionConfirmModal'
+import { QueueItem } from '@/types'
 
-type QueueItem = {
-  id: number
-  reference: string
-  service: string
-  user: string
-  email: string
-  status: 'waiting' | 'processing' | 'completed'
-  priority: 'normal' | 'urgent'
-  created_at: string
-}
+
 
 const statusColor: Record<string, string> = {
   waiting: 'default',
@@ -46,6 +38,7 @@ export default function QueueDetailsDrawer({
   const [actionModalOpen, setActionModalOpen] = useState(false)
   const [actionType, setActionType] = useState<'processing' | 'completed'>('processing')
 
+  console.log(data);
 
   return (
     <>
@@ -54,19 +47,19 @@ export default function QueueDetailsDrawer({
         open={open}
         onClose={onClose}
         width={420}
-        destroyOnClose={false} // 🔑 KEEP MOUNTED
+        destroyOnHidden={false} // 🔑 KEEP MOUNTED
         maskClosable
         placement="right"
         title={
           data && (
             <Space>
-              <strong>{data.reference}</strong>
-              <Tag color={statusColor[data.status]}>
-                {data.status.toUpperCase()}
+              <strong>{data.queue_number}</strong>
+              <Tag color={data.status ? statusColor[data.status] : statusColor['waiting']}>
+                {data.status?.toUpperCase()}
               </Tag>
               <Badge
                 status={data.priority === 'urgent' ? 'error' : 'default'}
-                text={data.priority.toUpperCase()}
+                text={data.priority?.toUpperCase()}
               />
             </Space>
           )
@@ -77,7 +70,10 @@ export default function QueueDetailsDrawer({
             {/* Request Info */}
             <Descriptions column={1} size="small" title="Request Information">
               <Descriptions.Item label="Service">
-                {data.service}
+                {data.service?.name}
+              </Descriptions.Item>
+              <Descriptions.Item label="Current Step">
+                {data.current_step?.name}
               </Descriptions.Item>
               <Descriptions.Item label="Submitted At">
                 {data.created_at}
@@ -89,10 +85,10 @@ export default function QueueDetailsDrawer({
             {/* User Info */}
             <Descriptions column={1} size="small" title="User Information">
               <Descriptions.Item label="Name">
-                {data.user}
+                {data.client_name}
               </Descriptions.Item>
               <Descriptions.Item label="Email">
-                {data.email}
+                {data.client_name}
               </Descriptions.Item>
             </Descriptions>
 
@@ -157,7 +153,7 @@ export default function QueueDetailsDrawer({
       <ActionConfirmModal
         open={actionModalOpen}
         action={actionType}
-        itemRef={data? data.reference : ''}
+        itemRef={data?.queue_number ? data.queue_number : ''}
         onCancel={() => setActionModalOpen(false)}
         onConfirm={async () => {
           // Simulate API call
@@ -166,6 +162,7 @@ export default function QueueDetailsDrawer({
           console.log('Action performed:', actionType)
         }}
       />
+
     </>
 
   )
