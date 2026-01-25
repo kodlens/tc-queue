@@ -130,10 +130,9 @@ class AdminUserController extends Controller
     }
 
 
-    public function unassignService($userId, $serviceId){
+    public function unassignService($userServiceId){
 
-        UserService::where('user_id', $userId)->where('service_id', $serviceId)->delete();
-
+        UserService::destroy($userServiceId);
         return response()->json([
             'status' => 'unassigned'
         ], 200);

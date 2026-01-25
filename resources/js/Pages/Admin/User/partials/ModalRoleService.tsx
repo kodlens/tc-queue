@@ -1,5 +1,5 @@
 import { App, Button, Input, Modal, Pagination, Space, Table } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Service, User } from '@/types';
 import axios from 'axios';
@@ -21,7 +21,7 @@ export default function ModalRoleService({ user, open, onClose, onSuccess }: Pro
   const [search, setSearch] = useState<string>('')
   const { notification, } = App.useApp();
 
-  function assignService(values:Service): void {
+  function assignService(values: Service): void {
     setLoading(true)
     axios.post('/admin/users-assign-service/' + user.id, values)
       .then(res => {
@@ -52,13 +52,13 @@ export default function ModalRoleService({ user, open, onClose, onSuccess }: Pro
     refetchOnWindowFocus: false
   })
 
-  const handleDelete = (id:number) => () => {
-      axios.delete('/admin/users-unassign-service/' + user.id + '/' + id).then(res => {
-        if (res.data.status === 'unassigned') {
-          notification.success({ message: "Service successfully unassigned.", duration: 2, showProgress: true })
-        }
-        refetch();
-      })
+  const handleDelete = (id: number) => () => {
+    axios.delete('/admin/users-unassign-service/' + id).then(res => {
+      if (res.data.status === 'unassigned') {
+        notification.success({ message: "Service successfully unassigned.", duration: 2, showProgress: true })
+      }
+      onSuccess()
+    })
   }
 
   return (
@@ -67,55 +67,57 @@ export default function ModalRoleService({ user, open, onClose, onSuccess }: Pro
         open={open}
         title="SELECT SERVICE"
         width={640}
-        onCancel={() => onClose() }
+        onCancel={() => onClose()}
         destroyOnHidden
         footer={null}
       >
+
         <div className='my-6'>
-          { Array.isArray(user.services) && (
-            <div className='font-bold'>Assigned Services</div>
-          )}
-          { user.services.length > 0 ? (
+          {Array.isArray(user.services) && (
             <>
-              { user.services.map((service:any) => (
-                <div key={service.id} className='flex text-sm p-2 bg-gray-100 m-2'>{ service.service.name }
-                  <Button size='small' className='ml-auto' danger onClick={handleDelete(service.id)}>x</Button>
-                </div>
-              )) }
+              <div className='font-bold'>Assigned Services</div>
+              {user.services.length > 0 && (
+                user.services.map((service: any) => (
+                  <div key={service.id} className='flex text-sm p-2 bg-gray-100 m-2'>{service.service.name}
+                    <Button size='small' className='ml-auto' danger onClick={handleDelete(service.id)}>x</Button>
+                  </div>
+                ))
+              )}
             </>
-          ): null}
+          )}
+
         </div>
 
-        <Input.Search placeholder="Search"  onSearch={(value) => {
+        <Input.Search placeholder="Search" onSearch={(value) => {
           setSearch(value)
         }} enterButton />
 
-      <Table dataSource={data ? data?.data : []}
-        loading={isFetching}
-        rowKey={(data) => data.id}
-        pagination={false}>
+        <Table dataSource={data ? data?.data : []}
+          loading={isFetching}
+          rowKey={(data) => data.id}
+          pagination={false}>
 
-        <Column title="Id" dataIndex="id" />
-        <Column title="Role" dataIndex="name" key="name" />
-        {/* <Column title="Slug" dataIndex="slug" key="slug" /> */}
-        <Column title="Action" key="action"
-          render={(_, data: Service) => (
-            <Space size="small">
-              <Button loading={loading}
-               icon={<ArrowRightFromLine size={16} />}
-               onClick={ ()=> assignService(data) } />
-            </Space>
-          )}
-        />
-      </Table>
+          <Column title="Id" dataIndex="id" />
+          <Column title="Role" dataIndex="name" key="name" />
+          {/* <Column title="Slug" dataIndex="slug" key="slug" /> */}
+          <Column title="Action" key="action"
+            render={(_, data: Service) => (
+              <Space size="small">
+                <Button loading={loading}
+                  icon={<ArrowRightFromLine size={16} />}
+                  onClick={() => assignService(data)} />
+              </Space>
+            )}
+          />
+        </Table>
 
-      <Pagination className='mt-4'
-        onChange={(page:number)=>{
-          setPage(page)
-        }}
-        pageSize={10}
-        defaultCurrent={1}
-        total={data?.total} />
+        <Pagination className='mt-4'
+          onChange={(page: number) => {
+            setPage(page)
+          }}
+          pageSize={10}
+          defaultCurrent={1}
+          total={data?.total} />
 
       </Modal>
     </>
