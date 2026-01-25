@@ -58,10 +58,10 @@ export default function StaffLayout({
       onClick: () => router.visit('/staff/dashboard'),
     },
     {
-      key: 'staff.services',
+      key: 'staff.documents',
       icon: <ProfileOutlined />,
-      label: 'Services',
-      onClick: () => router.visit('/staff/services'),
+      label: 'Documents',
+      onClick: () => router.visit('/staff/documents'),
     },
     {
       key: 'staff.service-steps',
@@ -94,19 +94,19 @@ export default function StaffLayout({
     //     },
     //   ],
     // },
-    { type: 'divider' },
-    {
-      key: 'staff.roles',
-      icon: <Shield size={16}/> ,
-      label: 'Roles',
-      onClick: () => router.visit('/staff/roles'),
-    },
-    {
-      key: 'staff.users',
-      icon: <UserOutlined />,
-      label: 'Users',
-      onClick: () => router.visit('/staff/users'),
-    },
+    //{ type: 'divider' },
+    // {
+    //   key: 'staff.roles',
+    //   icon: <Shield size={16}/> ,
+    //   label: 'Roles',
+    //   onClick: () => router.visit('/staff/roles'),
+    // },
+    // {
+    //   key: 'staff.users',
+    //   icon: <UserOutlined />,
+    //   label: 'Users',
+    //   onClick: () => router.visit('/staff/users'),
+    // },
   ];
 
   return (

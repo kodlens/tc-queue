@@ -22,8 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('current_step_id')->nullable();
 
             $table->enum('status', ['waiting', 'processing', 'on_hold', 'returned', 'completed', 'cancelled'])->default('waiting');
-
-
+            $table->enum('priority', ['normal', 'urgent'])->default('normal');
 
             $table->foreign('service_id')
                 ->references('id')

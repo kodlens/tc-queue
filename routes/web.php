@@ -92,6 +92,8 @@ Route::prefix('staff')->middleware('auth', 'staff')->group(function () {
 
     Route::get('/dashboard', [App\Http\Controllers\Staff\StaffDashboardController::class, 'index'])->name('staff.dashboard.index');
 
+    Route::resource('/documents', App\Http\Controllers\Staff\StaffDocumentController::class);
+
 });
 
 require __DIR__.'/auth.php';

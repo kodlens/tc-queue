@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class StaffDashboardController extends Controller
+use App\Http\Controllers\Base\DocumentController;
+
+class StaffDocumentController extends DocumentController
 {
-    //
     public function index(){
-        return Inertia::render('Staff/Dashboard/StaffDashboardIndex');
+        return Inertia::render('Staff/StaffDocumentIndex');
     }
+
 }
