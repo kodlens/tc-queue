@@ -34,6 +34,18 @@ export interface Service {
 }
 
 
+export interface Step {
+	data(data: any): unknown;
+  id?: number;
+  name?: string;
+  service_id?: number;
+  step_order?: number;
+  sla_minutes?: string;
+  created_at?: Date,
+  update_at?: Date
+}
+
+
 export interface Role {
 	data(data: any): unknown;
     id: number;

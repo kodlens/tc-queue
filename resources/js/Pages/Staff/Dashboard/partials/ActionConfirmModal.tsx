@@ -1,4 +1,4 @@
-import { Modal, Button, App } from 'antd'
+import { Modal, App } from 'antd'
 import { useState } from 'react'
 
 type ActionConfirmModalProps = {

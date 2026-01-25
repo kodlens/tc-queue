@@ -57,18 +57,18 @@ export default function StaffLayout({
       label: 'Dashboard',
       onClick: () => router.visit('/staff/dashboard'),
     },
-    {
-      key: 'staff.documents',
-      icon: <ProfileOutlined />,
-      label: 'Documents',
-      onClick: () => router.visit('/staff/documents'),
-    },
-    {
-      key: 'staff.service-steps',
-      icon: <BarsOutlined />,
-      label: 'Service Steps',
-      onClick: () => router.visit('/staff/service-steps'),
-    },
+    // {
+    //   key: 'staff.documents',
+    //   icon: <ProfileOutlined />,
+    //   label: 'Documents',
+    //   onClick: () => router.visit('/staff/documents'),
+    // },
+    // {
+    //   key: 'staff.service-steps',
+    //   icon: <BarsOutlined />,
+    //   label: 'Service Steps',
+    //   onClick: () => router.visit('/staff/service-steps'),
+    // },
     //{ type: 'divider' },
 
     //{ type: 'divider' },

@@ -30,6 +30,13 @@ class Queue extends Model
         return $this->belongsTo(ServiceStep::class, 'current_step_id');
     }
 
+
+    public function serviceSteps()
+    {
+        return $this->hasMany(ServiceStep::class, 'service_id', 'service_id')
+            ->orderBy('step_order', 'asc');
+    }
+
     public function logs()
     {
         return $this->hasMany(QueueLog::class);

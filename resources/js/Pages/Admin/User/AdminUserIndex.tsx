@@ -130,7 +130,8 @@ const AdminUserIndex = () => {
             }} enterButton />
           </div>
 					<div>
-						<Table dataSource={data ? data?.data : []}
+						<Table
+              dataSource={data ? data?.data : []}
               className='overflow-auto'
 							loading={isFetching}
 							rowKey={(data) => data.id}

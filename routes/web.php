@@ -94,6 +94,10 @@ Route::prefix('staff')->middleware('auth', 'staff')->group(function () {
 
     Route::resource('/documents', App\Http\Controllers\Staff\StaffDocumentController::class);
 
+
+    Route::resource('/queues', App\Http\Controllers\Staff\StaffQueueController::class);
+    Route::get('/get-queues', [App\Http\Controllers\Staff\StaffQueueController::class, 'getData'])->name('staff.queues.get-data');
+
 });
 
 require __DIR__.'/auth.php';
