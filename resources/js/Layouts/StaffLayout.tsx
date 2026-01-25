@@ -1,153 +1,204 @@
-import { useState, PropsWithChildren, ReactNode } from 'react';
-import { Link, router, useForm, usePage } from '@inertiajs/react';
-import { PageProps, User } from '@/types';
+import { useState, PropsWithChildren } from 'react';
+import { Link, router, useForm } from '@inertiajs/react';
 
 import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    CreditCardOutlined,
-    HomeOutlined, DeleteOutlined,
-    FormOutlined, UserOutlined, LockOutlined
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined,
+  ProfileOutlined,
+  BarsOutlined,
+  DashboardOutlined,
 } from '@ant-design/icons';
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
-  const { Header, Sider, Content } = Layout;
+import { LogOut, Shield } from 'lucide-react';
 
+const { Header, Sider, Content } = Layout;
 
-export default function StaffLayout(
-    { user, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
+/* =======================
+   ORANGE GRADIENT SIDEBAR
+======================= */
+const siderStyle: React.CSSProperties = {
+  background: 'linear-gradient(180deg, #ff7a18 80%, #ff9f1c 100%, #ffb347 100%)',
+  boxShadow: '4px 0 15px rgba(0,0,0,0.15)',
+};
 
-    const { post } = useForm();
+/* =======================
+   TYPES
+======================= */
+type MenuItem = Required<MenuProps>['items'][number];
 
-    //destruct object permissions
-    const { permissions } = usePage<PageProps>().props;
+interface AdminLayoutProps {
+  user: {
+    fname: string;
+    lname: string;
+  };
+}
 
-    const [collapsed, setCollapsed] = useState(false);
+export default function StaffLayout({
+  user,
+  children,
+}: PropsWithChildren<AdminLayoutProps>) {
+  const { post } = useForm();
+  const [collapsed, setCollapsed] = useState(false);
 
-    const handleLogout = () => {
-        post(route('logout'));
-    }
+  const handleLogout = () => {
+    post(route('logout'));
+  };
 
-    type MenuItem = Required<MenuProps>['items'][number];
-    const navigationItems = (paramPermissions:string[]) => {
-        //dynamic rendering is disabled for the meantime :(
-		const items:MenuItem[] = [];
-        items.push({
-            key: 'encoder.dashboard.index',
-            icon: <HomeOutlined />,
-            label: 'Dashboard',
-            onClick: () => router.visit('/encoder/dashboard')
-        },
-        {
-            key: 'encoder.posts.index',
-            icon: <FormOutlined />,
-            label: 'Posts',
-            onClick: ()=> router.visit('/encoder/posts')
-        },
-        {
-            key: 'posts.publish',
-            icon: <CreditCardOutlined />,
-            label: 'Published',
-            onClick: ()=> router.visit('/encoder/post-publish')
-        },
-        {
-            key: 'trashes.index',
-            icon: <DeleteOutlined />,
-            label: 'Trashes',
-            onClick: ()=> router.visit('/encoder/post-trashes')
+  /* =======================
+     NAVIGATION
+  ======================= */
+  const navigationItems = (): MenuItem[] => [
+    {
+      key: 'staff.dashboard',
+      icon: <DashboardOutlined />,
+      label: 'Dashboard',
+      onClick: () => router.visit('/staff/dashboard'),
+    },
+    {
+      key: 'staff.services',
+      icon: <ProfileOutlined />,
+      label: 'Services',
+      onClick: () => router.visit('/staff/services'),
+    },
+    {
+      key: 'staff.service-steps',
+      icon: <BarsOutlined />,
+      label: 'Service Steps',
+      onClick: () => router.visit('/staff/service-steps'),
+    },
+    //{ type: 'divider' },
 
-        },
-        {
-            type:'divider'
-        },
-        {
-            key: 'my-account.index',
-                icon: <UserOutlined />,
-            label: 'My Account',
-            onClick: ()=> router.visit('/my-account')
+    //{ type: 'divider' },
+    // {
+    //   key: 'posts',
+    //   icon: <FormOutlined />,
+    //   label: 'Posts',
+    //   children: [
+    //     {
+    //       key: 'staff.posts.articles',
+    //       label: 'Articles',
+    //       onClick: () => router.visit('/staff/posts'),
+    //     },
+    //     {
+    //       key: 'staff.posts.featureds',
+    //       label: 'Featured Posts',
+    //       onClick: () => router.visit('/staff/post-featured'),
+    //     },
+    //     {
+    //       key: 'staff.posts.archives',
+    //       label: 'Archives',
+    //       onClick: () => router.visit('/staff/post-archives'),
+    //     },
+    //   ],
+    // },
+    { type: 'divider' },
+    {
+      key: 'staff.roles',
+      icon: <Shield size={16}/> ,
+      label: 'Roles',
+      onClick: () => router.visit('/staff/roles'),
+    },
+    {
+      key: 'staff.users',
+      icon: <UserOutlined />,
+      label: 'Users',
+      onClick: () => router.visit('/staff/users'),
+    },
+  ];
 
-        },
-        {
-            key: 'change-password.index',
-                icon: <LockOutlined />,
-            label: 'Change Password',
-            onClick: ()=> router.visit('/change-password')
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      {/* =======================
+           SIDEBAR
+      ======================= */}
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        width={300}
+        breakpoint="md"
+        style={siderStyle}
+        onBreakpoint={(broken) => setCollapsed(broken)}
+      >
+        <PanelSideBarLogo collapse={collapsed}/>
 
-        },
-    );
+        <ConfigProvider
+          theme={{
+            components: {
+              Menu: {
+                itemColor: '#ffffff',
+                itemHoverColor: '#ffffff',
+                itemSelectedColor: '#ffffff',
 
+                itemHoverBg: 'rgba(255,255,255,0.15)',
+                itemSelectedBg: 'rgba(255,255,255,0.25)',
 
-		return items;
-	}
+                subMenuItemBg: 'transparent',
+                groupTitleColor: 'rgba(255,255,255,0.7)',
+              },
+            },
+          }}
+        >
+          <Menu
+            mode="inline"
+            style={{
+              background: 'transparent',
+              borderRight: 0,
+            }}
+            defaultSelectedKeys={[
+              route().current()?.split('.')?.slice(0, -1).join('.') ?? '',
+            ]}
+            items={navigationItems()}
+          />
+        </ConfigProvider>
+      </Sider>
 
+      {/* =======================
+           MAIN CONTENT
+      ======================= */}
+      <Layout>
+        <Header
+          style={{
+            padding: 0,
+            background: '#ffffff',
+            borderBottom: '1px solid #e5e7eb',
+          }}
+        >
+          <div className="flex items-center h-full">
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{ width: 64, height: 64, fontSize: 16 }}
+            />
 
-    return (
+            <div className="ml-auto mr-4 flex items-center gap-4">
+              <Link href="#" className="font-medium text-gray-700">
+                {user.lname} {user.fname[0]}.
+              </Link>
 
-        <>
-            <Layout>
-                <Sider trigger={null} collapsible
-                    collapsed={collapsed} width={300} style={{ background: "#084c7f" }}>
-                    <PanelSideBarLogo />
-                    <ConfigProvider theme={{
-                        token: {
-                            colorText: 'white'
-                        }
-                    }}>
-                        <Menu
-                            mode="inline"
-                            style={{ background: "#084c7f",
-                                color: 'white',
-                            }}
-                            defaultSelectedKeys={[`${route().current()}`]}
-                            items={
-                                navigationItems(permissions)
-                            }
-                        />
+              <Button
+                danger
+                onClick={handleLogout}
+                icon={<LogOut size={16} />}
+              />
+            </div>
+          </div>
+        </Header>
 
-                    </ConfigProvider>
-                </Sider>
-                <Layout>
-                    <Header
-                        className='border'
-                        style={{ padding: 0, background: 'white' }}
-                    >
-                        <div className='flex items-center'>
-                            <Button
-                                type="text"
-                                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                                onClick={() => setCollapsed(!collapsed)}
-                                style={{
-                                    fontSize: '16px',
-                                    width: 64,
-                                    height: 64,
-                                }}
-                            />
-
-
-                            <div className='ml-auto mr-4 flex items-center gap-4'>
-                                <Link href=''>{user.lname} {user.fname[0]}.</Link>
-                                <Button className='' onClick={handleLogout}>Logout</Button>
-                            </div>
-
-                        </div>
-                    </Header>
-                    <Content
-                        style={{
-                            margin: 0,
-                            padding: 0,
-                            height: 'calc(100vh - 64px)',
-                            background: "#dce6ec",
-                            overflow: 'auto',
-                            borderRadius: 0,
-                        }}
-                    >
-                        <main className='py-4'>{children}</main>
-                    </Content>
-                </Layout>
-            </Layout>
-        </>
-
-
-    );
+        <Content
+          style={{
+            background: '#f1f5f9',
+            padding: 24,
+            overflow: 'auto',
+          }}
+        >
+          {children}
+        </Content>
+      </Layout>
+    </Layout>
+  );
 }

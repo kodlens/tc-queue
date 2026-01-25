@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Publisher;
+namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class PublisherDashboardController extends Controller
+class StaffDashboardController extends Controller
 {
     //
     public function index(){
-        return Inertia::render('Publisher/PublisherDashboard');
+        return Inertia::render('Staff/StaffDashboardIndex');
     }
 }

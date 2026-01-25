@@ -10,7 +10,7 @@ import { Space, Table,
     Input} from 'antd';
 
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import axios from 'axios';
 import ChangePassword from './partials/ChangePassword';
 import AdminLayout from '@/Layouts/AdminLayout';
@@ -21,11 +21,6 @@ import ModalRoleService from './partials/ModalRoleService';
 import { useQuery } from '@tanstack/react-query';
 
 const { Column } = Table;
-
-interface PaginateResponse {
-    data: User[],
-    total: number;
-}
 
 const AdminUserIndex = () => {
 

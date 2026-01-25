@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
             ],
 
             [
-                'username' => 'user',
+                'username' => 'staff',
                 'lname' => 'KAAMINO',
                 'fname' => 'MELDHE',
                 'mname' => '',

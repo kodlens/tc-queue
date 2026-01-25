@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Auth;
 
-class EncoderMiddleware
+class StaffMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,7 +18,7 @@ class EncoderMiddleware
     {
         $role = Auth::user()->role;
         //return redirect(RouteServiceProvider::HOME);
-        if(strtolower($role) == 'encoder')
+        if(strtolower($role) == 'staff')
             return $next($request);
 
         return abort(403);

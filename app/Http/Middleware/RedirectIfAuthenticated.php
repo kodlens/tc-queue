@@ -28,12 +28,8 @@ class RedirectIfAuthenticated
                 if(strtolower($role) == 'admin')
                     return redirect('/admin/dashboard');
 
-                if(strtolower($role) == 'publisher')
-                    return redirect('/publisher/dashboard');
-
-                if(strtolower($role) == 'encoder')
-                    return redirect('/encoder/dashboard');
-
+                if(strtolower($role) == 'staff')
+                    return redirect('/staff/dashboard');
                 //return redirect('/panel/dashboard');
             }
         }

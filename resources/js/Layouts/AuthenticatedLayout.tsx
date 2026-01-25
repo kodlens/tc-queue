@@ -2,11 +2,10 @@ import {  PropsWithChildren, ReactNode } from 'react';
 
 import {  Layout } from 'antd';
 import AdminLayout from './AdminLayout';
-import PublisherLayout from './PublisherLayout';
-import AuthorLayout from './EncoderLayout';
+import StaffLayout from './StaffLayout';
 
 export default function AuthenticatedLayout(
-    { user, header, children }: PropsWithChildren<{ user: any, header?: ReactNode}>) {
+    { user, children }: PropsWithChildren<{ user: any, header?: ReactNode}>) {
 
     return (
 
@@ -15,12 +14,8 @@ export default function AuthenticatedLayout(
                 {user.role.toLowerCase() === 'admin' && (
                     <AdminLayout user={user} children={children}></AdminLayout>
                 )}
-
-                {user.role.toLowerCase() === 'author' && (
-                    <AuthorLayout user={user} children={children}></AuthorLayout>
-                )}
-                {user.role.toLowerCase() === 'publisher' && (
-                    <PublisherLayout user={user} children={children}></PublisherLayout>
+                {user.role.toLowerCase() === 'staff' && (
+                    <StaffLayout user={user} children={children}></StaffLayout>
                 )}
 
             </Layout>
