@@ -6,7 +6,8 @@ import { FileAddOutlined, EditOutlined } from '@ant-design/icons';
 import { Space, Table,
     Pagination, Button,
     MenuProps,
-    Dropdown} from 'antd';
+    Dropdown,
+    Input} from 'antd';
 
 
 import { useEffect, useState } from 'react'
@@ -17,6 +18,7 @@ import CardTitle from '@/Components/CardTitle';
 import { ArrowBigRight, KeySquare } from 'lucide-react';
 import { ModalUserAddEdit } from './partials/ModalUserAddEdit';
 import ModalRoleService from './partials/ModalRoleService';
+import { useQuery } from '@tanstack/react-query';
 
 const { Column } = Table;
 
@@ -27,15 +29,12 @@ interface PaginateResponse {
 
 const AdminUserIndex = () => {
 
-    const [data, setData] = useState<User[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [total, setTotal] = useState(0);
-
+    const [search, setSearch] = useState('');
     const [userOpen, setUserOpen] = useState(false); //for modal
     const [changePasswordOpen, setChangePasswordOpen] = useState(false);
     const [roleServiceOpen, setRoleServiceOpen] = useState(false);
 
-	const [perPage, setPerPage] = useState(10);
+	  const [perPage, setPerPage] = useState(10);
     const [page, setPage] = useState(1);
     const [user, setUser] = useState<User>({} as User);
 
@@ -74,35 +73,26 @@ const AdminUserIndex = () => {
 		return items;
 	}
 
+  const { data, isFetching, refetch } = useQuery({
+    queryKey: ['users', search, perPage, page],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        perpage: '10',
+        search: search.toString(),
+        page: page.toString(),
+      })
+      const res = await axios.get(`/admin/get-users?${params}`)
+      return res.data
+    },
+    refetchOnWindowFocus: false
+  })
 
 
-	const loadDataAsync = async () => {
 
-    setLoading(true)
-    const params = [
-        `perpage=${perPage}`,
-        `page=${page}`
-    ].join('&');
-
-		try{
-			const res = await axios.get<PaginateResponse>(`/admin/get-users?${params}`);
-        setData(res.data.data)
-        setTotal(res.data.total)
-        setLoading(false)
-      }catch(err){
-        console.log(err)
-      }
-    }
-
-    useEffect(()=>{
-        loadDataAsync()
-    },[perPage, page])
-
-
-    const onPageChange = (index:number, perPage:number) => {
-      setPage(index)
-      setPerPage(perPage)
-    }
+  const onPageChange = (index:number, perPage:number) => {
+    setPage(index)
+    setPerPage(perPage)
+  }
 
 
 
@@ -134,13 +124,20 @@ const AdminUserIndex = () => {
 					sm:w-[640px]
 					md:w-[990px]'>
 					{/* card header */}
-                    <CardTitle title="LIST OF USERS" />
+          <CardTitle title="LIST OF USERS" />
 
 					{/* card body */}
+
+          <div className='my-4'>
+            <Input.Search placeholder="Search Last Name"
+              className='w-full' onSearch={(value)=>{
+              setSearch(value)
+            }} enterButton />
+          </div>
 					<div>
-						<Table dataSource={data}
-                            className='overflow-auto'
-							loading={loading}
+						<Table dataSource={data ? data?.data : []}
+              className='overflow-auto'
+							loading={isFetching}
 							rowKey={(data) => data.id}
 							pagination={false}>
 
@@ -178,7 +175,7 @@ const AdminUserIndex = () => {
 						<Pagination className='mt-4'
 							onChange={onPageChange}
 							defaultCurrent={1}
-							total={total} />
+							total={data?.total} />
 
 						<div className='flex flex-end mt-2'>
 							<Button className='ml-auto'
@@ -199,7 +196,7 @@ const AdminUserIndex = () => {
                     setUserOpen(false)
                 }} onSuccess={()=>{
                     setUserOpen(false)
-                    loadDataAsync()
+                    refetch()
                 }}/>
 
 
@@ -221,7 +218,7 @@ const AdminUserIndex = () => {
                 }}
                 onSuccess={() => {
                     setRoleServiceOpen(false);
-                    loadDataAsync()
+                    refetch()
                 }}
             />
 
