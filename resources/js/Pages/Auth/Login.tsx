@@ -2,94 +2,105 @@ import { useEffect, useState } from 'react';
 import { Head, router } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 
-import {  LoginOutlined } from '@ant-design/icons';
+import { LoginOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 
 import axios from 'axios';
 
 export default function Login() {
-
-
   const [form] = Form.useForm();
-
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
-  useEffect(() => {
-    return () => {
-      //reset('password');
-    };
-  }, []);
-
   const submit = (values: object) => {
-    setLoading(true)
+    setLoading(true);
+    setErrors({});
 
-    setErrors({})
+    axios.post('/login', values)
+      .then(() => {
+        router.visit('/');
+      })
+      .catch(err => {
+        const serverErrors = err.response?.data?.errors || {};
+        setErrors(serverErrors);
 
-    axios.post('/login', values).then(() => {
-      router.visit('/login')
-    }).catch(err => {
-      setErrors(err.response.data.errors)
-      form.resetFields()
-      setLoading(false)
-    })
+         if (Object.keys(serverErrors).length > 0) {
+            form.scrollToField(Object.keys(serverErrors)[0]); // 👈 scroll to first error
+          }
 
+        form.resetFields(['password']);
+        setLoading(false);
+      });
   };
 
   return (
     <>
-      <div className='min-h-screen flex justify-center items-center bg-page-1'>
-        <Head title="Log in" />
+      <Head title="Log in" />
 
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 px-4">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
 
-        <div className='bg-white p-6 shadow-lg rounded-md w-full m-3 sm:w-[400px]'>
-          <div className='mb-5'>
-            <ApplicationLogo></ApplicationLogo>
+          {/* Logo */}
+          <div className="flex justify-center mb-4">
+            <ApplicationLogo />
           </div>
 
-          <div className='font-bold text-xl mb-7 text-center'>SIGN IN TO YOUR ACCOUNT</div>
+          {/* Title */}
+          <h1 className="text-center text-xl font-bold text-gray-800">
+            Sign in to your account
+          </h1>
+          <p className="text-center text-sm text-gray-500 mb-6">
+            Enter your credentials to continue
+          </p>
 
-          <div className='mb-2'>
+          {/* Form */}
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={submit}
+            autoComplete="off"
+            initialValues={{ username: '', password: '' }}
+          >
+            <Form.Item
+              label="Username"
+              name="username"
+              validateStatus={errors?.username ? 'error' : ''}
+              help={errors?.username?.[0]}
+            >
+              <Input
+                size="large"
+                placeholder="Username"
+                prefix={<UserOutlined />}
+              />
+            </Form.Item>
 
-            <Form
-              form={form}
-              layout="vertical"
-              onFinish={submit}
-              autoComplete='off'
-              initialValues={{
-                username: '',
-                password: '',
-              }}>
+            <Form.Item
+              label="Password"
+              name="password"
+              validateStatus={errors?.password ? 'error' : ''}
+              help={errors?.password?.[0]}
+            >
+              <Input.Password
+                size="large"
+                placeholder="Password"
+                prefix={<LockOutlined />}
+              />
+            </Form.Item>
 
-              <Form.Item label="USERNAME"
-                name="username"
-                validateStatus={errors?.username ? 'error' : ''}
-                help={errors?.username ? errors?.username[0] : ''}
-              >
-                <Input placeholder="Username" size="large" />
-              </Form.Item>
-
-              <Form.Item label="PASSWORD"
-                name="password"
-                validateStatus={errors?.password ? 'error' : ''}
-                help={errors?.password ? errors?.password[0] : ''}
-              >
-                <Input.Password placeholder="Password" size="large" />
-              </Form.Item>
-
-              <Button
-                htmlType="submit"
-                className='w-full font-bold'
-                type="primary"
-                icon={<LoginOutlined />} size='large' loading={loading}>
-                LOGIN
-              </Button>
-            </Form>
-          </div>
+            <Button
+              htmlType="submit"
+              type="primary"
+              size="large"
+              block
+              icon={<LoginOutlined />}
+              loading={loading}
+              className="mt-2 font-semibold"
+            >
+              Log In
+            </Button>
+          </Form>
 
         </div>
-        {/* card */}
-
       </div>
     </>
   );
