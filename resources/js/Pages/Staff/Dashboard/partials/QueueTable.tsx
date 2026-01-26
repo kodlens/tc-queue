@@ -1,4 +1,4 @@
-import { Table, Dropdown, Button, Tag, MenuProps, message } from 'antd'
+import { Table, Dropdown, Button, Tag, MenuProps, App, Pagination } from 'antd'
 import { MoreOutlined, EyeOutlined, SyncOutlined, CheckOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import QueueDetailsDrawer from './QueueDetailsDrawer'
@@ -7,21 +7,41 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Column from 'antd/es/table/Column'
 import { QueueItem, Step } from '@/types'
+import QueueFilterBar from './QueueFilterBar'
 
 
+export type QueueFilters = {
+  search: string
+  status: string | null
+  priority: string | null
+}
 
-export default function QueueTable() {``
+export default function QueueTable() {
+
+  const { notification } = App.useApp();
+
   const [selected, setSelected] = useState<QueueItem | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [menuLoading, setMenuLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
-  const { data, isFetching } = useQuery({
+
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ['queues'],
     queryFn: async() => {
-      const res = await axios.get('/staff/get-queues')
+      const params = new URLSearchParams({
+        page: page.toString()
+      })
+      const res = await axios.get(`/staff/get-queues?${params}`)
       return res.data
     },
   })
 
+
+    const handleFilterChange = (filters: QueueFilters) => {
+      console.log('Filters:', filters)
+      // later: pass to table or backend
+    }
 
 
   const handleAction = (type: string, queue: QueueItem) => {
@@ -29,24 +49,74 @@ export default function QueueTable() {``
     if (type === 'view') {
       setSelected(queue)
       setDrawerOpen(true)
-    } else if (type === 'step') {
-      message.info(`Step "${queue.current_step?.name}" selected for ${queue.queue_number}`)
-      // Here you can call backend API to update step
-    } else if (type === 'processing' || type === 'completed') {
-      message.success(`${type.toUpperCase()} action for ${queue.queue_number}`)
+    } else if (type === 'processing') {
+      startProcessing(queue)
     }
+    else if (type === 'completed') {
+      markAsCompleted(queue)
+    }
+
   }
 
+  const startProcessing = async (queue: QueueItem) => {
+    setMenuLoading(true)
+    await axios.post('/staff/queue/start-processing/' + queue.id).then(res => {
+      if(res.data.status === 'process') {
+         notification.success({
+          description: `Queue ${queue.queue_number} successfully started processing.`,
+          placement: 'bottomRight',
+          message: 'Process Started',
+        })
+      }
+      setMenuLoading(false)
+      refetch()
+    })
+  }
 
+  const markAsCompleted = async (queue: QueueItem) => {
+    setMenuLoading(true)
+    await axios.post('/staff/queue/mark-completed/' + queue.id).then(res => {
+      if(res.data.status === 'complete') {
+         notification.success({
+          description: `Queue ${queue.queue_number} successfully completed.`,
+          placement: 'bottomRight',
+          message: 'Process Completed',
+        })
+      }
+      setMenuLoading(false)
+      refetch()
+    })
+  }
+
+   const handleMoveStep = async (queue: QueueItem, step:Step) => {
+
+    setMenuLoading(true)
+    await axios.post('/staff/queue/move-to-step/' + queue.id, {
+      current_step_id: step.id
+    }).then(res => {
+      if(res.data.status === 'moved') {
+         notification.success({
+          description: `Queue ${queue.queue_number} step moved successfully.`,
+          placement: 'bottomRight',
+          message: 'Move Successfully',
+        })
+      }
+      setMenuLoading(false)
+      refetch()
+    })
+  }
 
   return (
     <>
+
+      <QueueFilterBar onChange={handleFilterChange} onRefresh={refetch}/>
+
       <Table
         dataSource={data ? data?.data : []}
         className='overflow-auto'
         loading={isFetching}
         rowKey={(data) => data.id}
-        pagination={{ pageSize: 5 }}
+        pagination={false}
        >
 
         <Column title="Queue #" dataIndex="queue_number" key="queue_number" width={120}/>
@@ -147,17 +217,18 @@ export default function QueueTable() {``
                 key: 'set-step',
                 icon: <Footprints size={15} />,
                 label: 'Set Step',
+                disabled: record.status === 'completed' || record.status === 'waiting',
                 children: record.service_steps?.map((step:Step, idx:number) => ({
                   key: `step-${idx}`,
                   label: step?.name,
-                  onClick: () => handleAction('step', record),
+                  onClick: () => handleMoveStep(record, step),
                 })),
               },
             ]
 
             return (
               <Dropdown menu={{ items: menuItems }} trigger={['click']}>
-                <Button type="text" icon={<MoreOutlined />} />
+                <Button loading={menuLoading} type="text" icon={<MoreOutlined />} />
               </Dropdown>
             )
           }}
@@ -165,6 +236,17 @@ export default function QueueTable() {``
 
 
        </Table>
+
+       <div className="flex">
+          <Pagination
+            className="ml-auto"
+            onChange={(value) => {
+              setPage(value)
+            }}
+            defaultCurrent={1}
+            total={data?.total}
+          />
+        </div>
 
       {/* Drawer for View Details */}
       {selected && (

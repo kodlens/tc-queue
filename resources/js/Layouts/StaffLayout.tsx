@@ -4,15 +4,12 @@ import { Link, router, useForm } from '@inertiajs/react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UserOutlined,
-  ProfileOutlined,
-  BarsOutlined,
   DashboardOutlined,
 } from '@ant-design/icons';
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
-import { LogOut, Shield } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 const { Header, Sider, Content } = Layout;
 
@@ -117,13 +114,12 @@ export default function StaffLayout({
       <Sider
         trigger={null}
         collapsible
-        collapsed={collapsed}
+        collapsed={!collapsed}
         width={300}
-        breakpoint="md"
         style={siderStyle}
         onBreakpoint={(broken) => setCollapsed(broken)}
       >
-        <PanelSideBarLogo collapse={collapsed}/>
+        <PanelSideBarLogo collapse={!collapsed}/>
 
         <ConfigProvider
           theme={{

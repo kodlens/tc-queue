@@ -1,5 +1,5 @@
 import { Button, Input, Select, Space, Card } from 'antd'
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons'
+import { SearchOutlined, ReloadOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 
 export type QueueFilters = {
@@ -10,8 +10,10 @@ export type QueueFilters = {
 
 export default function QueueFilterBar({
   onChange,
+  onRefresh,
 }: {
   onChange: (filters: QueueFilters) => void
+  onRefresh: () => void
 }) {
   const [filters, setFilters] = useState<QueueFilters>({
     search: '',
@@ -85,13 +87,23 @@ export default function QueueFilterBar({
           />
         </Space>
 
-        {/* Right side actions */}
-        <Button
-          icon={<ReloadOutlined />}
-          onClick={resetFilters}
-        >
-          Reset
-        </Button>
+        <div className='flex gap-2'>
+          {/* Right side actions */}
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={resetFilters}
+          >
+            Reset
+          </Button>
+
+          <Button
+            icon={<ReloadOutlined />}
+            onClick={onRefresh}
+          >
+            Refresh
+          </Button>
+        </div>
       </Space>
     </Card>
   )

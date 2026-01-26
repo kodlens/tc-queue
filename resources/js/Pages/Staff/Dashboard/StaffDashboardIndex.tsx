@@ -4,18 +4,11 @@ import { Head } from "@inertiajs/react";
 import { ReactNode } from "react";
 // import StatusCards from "./partials/StatusCards";
 import QueueStatusCards from "./partials/QueueStatusCards";
-import QueueFilterBar, { QueueFilters } from "./partials/QueueFilterBar";
 import QueueTable from "./partials/QueueTable";
 
 
 export default function StaffDashboardIndex({ auth }: PageProps) {
   const fullName = `${auth.user.fname} ${auth.user.mname ?? ''} ${auth.user.lname}`.trim();
-
-  const handleFilterChange = (filters: QueueFilters) => {
-    console.log('Filters:', filters)
-    // later: pass to table or backend
-  }
-
 
   return (
     <>
@@ -29,7 +22,6 @@ export default function StaffDashboardIndex({ auth }: PageProps) {
 
         <QueueStatusCards />
 
-        <QueueFilterBar onChange={handleFilterChange} />
         <QueueTable />
 
       </div>

@@ -96,7 +96,11 @@ Route::prefix('staff')->middleware('auth', 'staff')->group(function () {
 
 
     Route::resource('/queues', App\Http\Controllers\Staff\StaffQueueController::class);
+    Route::resource('/queues', App\Http\Controllers\Staff\StaffQueueController::class);
     Route::get('/get-queues', [App\Http\Controllers\Staff\StaffQueueController::class, 'getData'])->name('staff.queues.get-data');
+    Route::post('/queue/start-processing/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'startProcess'])->name('staff.queue.start-process');
+    Route::post('/queue/mark-completed/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'markCompleted'])->name('staff.queue.mark-completed');
+    Route::post('/queue/move-to-step/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'moveToStep'])->name('staff.queue.move-to-step');
 
 });
 
