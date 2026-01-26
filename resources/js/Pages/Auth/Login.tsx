@@ -26,8 +26,8 @@ export default function Login() {
 
     setErrors({})
 
-    axios.post('/km/login', values).then(() => {
-      router.visit('/km/login')
+    axios.post('/login', values).then(() => {
+      router.visit('/login')
     }).catch(err => {
       setErrors(err.response.data.errors)
       form.resetFields()

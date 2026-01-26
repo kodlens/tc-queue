@@ -46,10 +46,8 @@ class AuthenticatedSessionController extends Controller
 
         if(strtolower($role) == 'admin')
             return redirect()->intended(RouteServiceProvider::ADMIN);
-        else if(strtolower($role) == 'encoder')
-            return redirect()->intended(RouteServiceProvider::ENCODER);
-        else if(strtolower($role) == 'publisher')
-            return redirect()->intended(RouteServiceProvider::PUBLISHER);
+        else if(strtolower($role) == 'staff')
+            return redirect()->intended(RouteServiceProvider::STAFF);
         else
             return redirect()->intended(RouteServiceProvider::HOME);
 
@@ -67,6 +65,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/km/login');
+        return redirect('/login');
     }
 }

@@ -27,7 +27,7 @@ Route::get('/', function () {
  * CATEGORY PAGES HERE
  * ========================================
  */
-Route::get('/km/login', [App\Http\Controllers\WelcomePageController::class, 'index'])->name('welcome');
+Route::get('/login', [App\Http\Controllers\WelcomePageController::class, 'index'])->name('welcome');
 
 
 
@@ -42,9 +42,9 @@ Route::middleware('auth')->group(function () {
 
     /** ====================REPORTS======================== */
 
-    Route::get('/reports/articles-by-quarter', [ReportController::class, 'articlesByQuarter']);
-    Route::get('/reports/articles-by-status', [ReportController::class, 'articlesByStatus']);
-    Route::get('/reports/publication-timeliness', [ReportController::class, 'publicationTimeliness']);
+    // Route::get('/reports/articles-by-quarter', [ReportController::class, 'articlesByQuarter']);
+    // Route::get('/reports/articles-by-status', [ReportController::class, 'articlesByStatus']);
+    // Route::get('/reports/publication-timeliness', [ReportController::class, 'publicationTimeliness']);
 
     //global service API
     //Route::get('/remove-file/{filename}', [App\Http\Controllers\FileController::class, 'removeFile']);
@@ -54,9 +54,9 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')->middleware('auth', 'admin')->group(function () {
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('admin.dashboard.index');
 
@@ -76,14 +76,12 @@ Route::prefix('admin')->middleware('auth', 'admin')->group(function () {
     Route::post('/users-assign-service/{id}', [App\Http\Controllers\Admin\AdminUserController::class, 'assignService'])->name('admin.users.assign-service');
     Route::delete('/users-unassign-service/{userServiceId}', [App\Http\Controllers\Admin\AdminUserController::class, 'unassignService'])->name('admin.users.unassign-service');
 
-    Route::resource('/roles', App\Http\Controllers\Admin\AdminRoleController::class);
-    Route::get('/get-roles', [App\Http\Controllers\Admin\AdminRoleController::class, 'getData'])->name('roles.getdata');
 
-    Route::resource('/permissions', App\Http\Controllers\Admin\AdminPermissionController::class);
-    Route::get('/get-permissions', [App\Http\Controllers\Admin\AdminPermissionController::class, 'getData'])->name('permissions.getdata');
+    // Route::resource('/permissions', App\Http\Controllers\Admin\AdminPermissionController::class);
+    // Route::get('/get-permissions', [App\Http\Controllers\Admin\AdminPermissionController::class, 'getData'])->name('permissions.getdata');
 
-    Route::resource('/role-has-permissions', App\Http\Controllers\Admin\AdminRoleHasPermissionController::class);
-    Route::get('/get-role-has-permissions', [App\Http\Controllers\Admin\AdminRoleHasPermissionController::class, 'getData'])->name('role-has-permissions.getdata');
+    // Route::resource('/role-has-permissions', App\Http\Controllers\Admin\AdminRoleHasPermissionController::class);
+    // Route::get('/get-role-has-permissions', [App\Http\Controllers\Admin\AdminRoleHasPermissionController::class, 'getData'])->name('role-has-permissions.getdata');
 
 });
 
@@ -110,21 +108,23 @@ require __DIR__.'/auth.php';
 
 
 // logout auth (use for debuggin only)
-Route::get('/applogout', function(Request $req){
 
-    Auth::guard('web')->logout();
-    $req->session()->invalidate();
-
-    $req->session()->regenerateToken();
-
-    return redirect('/');
-});
 
 use Illuminate\Support\Facades\Hash;
 if(env('APP_DEBUG')){
     // logout auth (use for debuggin only)
     Route::get('/gen/pass/{pass}', function($pass){
         return Hash::make($pass);
+    });
+
+    Route::get('/applogout', function(Request $req){
+
+        Auth::guard('web')->logout();
+        $req->session()->invalidate();
+
+        $req->session()->regenerateToken();
+
+        return redirect('/');
     });
 
 }
