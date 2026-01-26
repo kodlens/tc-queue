@@ -1,289 +1,265 @@
 import { Service } from '@/types'
 import { Head } from '@inertiajs/react'
-
-import { FileAddOutlined,
-    DeleteOutlined, EditOutlined,
-    QuestionCircleOutlined } from '@ant-design/icons';
-
-import {  Space, Table, Modal,
-    Pagination, Button,
-    Form, Input, Checkbox,
-	App} from 'antd';
-
-
+import {
+  FileAddOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons'
+import {
+  Space,
+  Table,
+  Modal,
+  Pagination,
+  Button,
+  Form,
+  Input,
+  Checkbox,
+  Tag,
+  App,
+} from 'antd'
 import { useState } from 'react'
-import axios from 'axios';
-import AdminLayout from '@/Layouts/AdminLayout';
-import CardTitle from '@/Components/CardTitle';
-import { useQuery } from '@tanstack/react-query';
+import axios from 'axios'
+import AdminLayout from '@/Layouts/AdminLayout'
+import CardTitle from '@/Components/CardTitle'
+import { useQuery } from '@tanstack/react-query'
 
-const { Column } = Table;
-const { Search } = Input;
+const { Column } = Table
+const { Search } = Input
+
+const PER_PAGE = 10
 
 const AdminServiceIndex = () => {
+  const [form] = Form.useForm()
+  const { notification, modal } = App.useApp()
 
-	const [form] = Form.useForm();
+  const [open, setOpen] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [errors, setErrors] = useState<any>({})
+  const [id, setId] = useState<number | null>(null)
 
-	const { notification, modal } = App.useApp();
+  /* ================= QUERY ================= */
+  const { data, isFetching, refetch } = useQuery({
+    queryKey: ['services', page, PER_PAGE, search],
+    queryFn: async () => {
+      const params = {
+        perpage: PER_PAGE,
+        page,
+        search,
+      }
+      const res = await axios.get('/admin/get-services', { params })
+      return res.data
+    },
+    refetchOnWindowFocus: false,
+  })
 
-    const [open, setOpen] = useState(false); //for modal
+  /* ================= MODAL HANDLERS ================= */
+  const openNew = () => {
+    setId(null)
+    setErrors({})
+    form.resetFields()
+    setOpen(true)
+  }
 
+  const openEdit = async (id: number) => {
+    setId(id)
+    setErrors({})
+    setOpen(true)
 
-    const perPage = 10;
-    const [page, setPage] = useState(1);
-    const [search, setSearch] = useState('');
-    const [errors, setErrors] = useState<any>({});
-
-
-
-    const [id, setId] = useState(0);
-
-
-
-    const  { data, isFetching, refetch } = useQuery({
-        queryKey: ['categories', page, perPage],
-        queryFn: async () => {
-            const params = new URLSearchParams({
-                perpage: perPage.toString(),
-                search: search.toString(),
-                page: page.toString(),
-                //sort_by: sortBy.toString(),
-            });
-            const res = await axios.get(`/admin/get-services?${params}`)
-            return res.data
-        }
+    const res = await axios.get(`/admin/services/${id}`)
+    form.setFieldsValue({
+      name: res.data.name,
+      description: res.data.description,
+      active: !!res.data.active,
     })
+  }
 
+  const closeModal = () => {
+    setOpen(false)
+    setErrors({})
+    form.resetFields()
+  }
 
-    const onPageChange = (index:number) => {
-        setPage(index)
+  /* ================= DELETE ================= */
+  const handleDelete = async (id: number) => {
+    await axios.delete(`/admin/services/${id}`)
+    notification.success({
+      message: 'Deleted',
+      description: 'Service successfully deleted.',
+      placement: 'bottomRight',
+    })
+    refetch()
+  }
+
+  /* ================= SAVE ================= */
+  const onFinish = async (values: Service) => {
+    try {
+      setSaving(true)
+      setErrors({})
+
+      if (id) {
+        await axios.put(`/admin/services/${id}`, values)
+        notification.success({ message: 'Updated successfully' })
+      } else {
+        await axios.post('/admin/services', values)
+        notification.success({ message: 'Saved successfully' })
+      }
+
+      closeModal()
+      refetch()
+    } catch (err: any) {
+      if (err.response?.status === 422) {
+        const serverErrors = err.response.data.errors
+        setErrors(serverErrors)
+
+        const firstError = Object.keys(serverErrors)[0]
+        form.scrollToField(firstError)
+      }
+    } finally {
+      setSaving(false)
     }
+  }
 
+  /* ================= RENDER ================= */
+  return (
+    <>
+      <Head title="Services Management" />
 
-	const getData = async (id:number) => {
-		try{
-			const res = await axios.get(`/admin/services/${id}`);
-			form.setFields([
-				{ name: 'name', value: res.data.name },
-				{ name: 'description', value: res.data.description },
-				{ name: 'active', value: res.data.active ? true : false },
-			]);
-		}catch(err){
-            //console.log(err);
-		}
-    }
+      <div className="flex justify-center mt-10">
+        <div className="w-full max-w-5xl bg-white p-6 rounded-xl shadow-sm mx-3">
 
+          <CardTitle title="LIST OF SERVICES" />
 
-	const handClickNew = () => {
-        //router.visit('/');
-		setId(0)
-        setOpen(true)
-    }
+          {/* Toolbar */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            <Search
+              placeholder="Search services..."
+              allowClear
+              onSearch={(v) => {
+                setPage(1)
+                setSearch(v)
+              }}
+              loading={isFetching}
+              className="max-w-sm"
+            />
 
-	const handleEditClick = (id:number) => {
-		setErrors({})
-		setId(id);
-        setOpen(true);
-        getData(id);
-	}
-
-	const handleDeleteClick = async (id:number) => {
-		const res = await axios.delete('/admin/services/' + id);
-		if(res.data.status === 'deleted'){
-			notification.success({
-				message: 'Deleted!',
-				description:'Service successfully deleted.',
-				placement: 'bottomRight'
-			})
-			refetch()
-		}
-	}
-
-	const onFinish = async (values:Service) =>{
-
-		if(id > 0){
-			try{
-				const res = await axios.put('/admin/services/' + id, values)
-				if(res.data.status === 'updated'){
-					notification.success({
-						message: 'Updated!',
-						description:'Service successfully update.',
-						placement: 'bottomRight'
-					})
-					setOpen(false)
-					refetch()
-				}
-			}catch(err:any){
-				if(err.response.status === 422){
-					setErrors(err.response.data.errors)
-				}
-			}
-		}else{
-			try{
-				const res = await axios.post('/admin/services', values)
-				if(res.data.status === 'saved'){
-					notification.success({
-						message: 'Saved!',
-						description:'Service successfully save.',
-						placement: 'bottomRight'
-					})
-					setOpen(false)
-					refetch()
-				}
-			}catch(err:any){
-				if(err.response.status === 422){
-					setErrors(err.response.data.errors)
-
-				}
-			}
-		}
-	}
-
-	return (
-		<>
-			<Head title="Services Management"></Head>
-
-			<div className='flex mt-10 justify-center items-center'>
-
-				{/* card */}
-				<div className='p-6 w-full overflow-auto mx-2 bg-white shadow-sm rounded-md
-					md:w-[900px]
-					sm:w-[740px]'>
-					{/* card header */}
-					<CardTitle title={'LIST OF SERVICES'} />
-					{/* card body */}
-					<div>
-						<div className='mb-2'>
-							<Search placeholder="Search..."
-								autoComplete='off'
-								enterButton="Search"
-								size="large"
-								id="search"
-								onChange={(e) => setSearch(e.target.value)}
-								loading={isFetching}
-								onSearch={()=>refetch()} />
-						</div>
-						<div className='flex flex-end my-4'>
-							<Button className='ml-auto'
-								icon={<FileAddOutlined />}
-								type="primary" onClick={handClickNew}>
-								New
-							</Button>
-						</div>
-						<Table dataSource={data ? data?.data : []}
-							loading={isFetching}
-							rowKey={(data) => data.id}
-							pagination={false}>
-
-							<Column title="Id" dataIndex="id"/>
-							<Column title="Service" dataIndex="name" key="name"/>
-							<Column title="Description" dataIndex="description" key="description"/>
-							<Column title="Active" dataIndex="active" key="active" render={(active)=>(
-								active ? (
-									<span className='bg-green-600 font-bold text-white text-[10px] px-2 py-1 rounded-full'>YES</span>
-								) : (
-									<span className='bg-red-600 font-bold text-white text-[10px] px-2 py-1 rounded-full'>NO</span>
-								)
-							)}/>
-
-							<Column title="Action" key="action"
-								render={(_, data:Service) => (
-									<Space size="small">
-
-										<Button
-											icon={<EditOutlined/>} onClick={ ()=> handleEditClick(data.id) } />
-
-										<Button danger
-											onClick={()=> (
-												modal.confirm({
-													title: 'Delete?',
-													icon: <QuestionCircleOutlined />,
-													content: 'Are you sure you want to delete this data?',
-													okText: 'Yes',
-													cancelText: 'No',
-													onOk() {
-														handleDeleteClick(data.id)
-													}
-												})
-											)}
-											icon={<DeleteOutlined/>} />
-									</Space>
-								)}
-							/>
-						</Table>
-
-						<Pagination className='mt-4'
-							onChange={onPageChange}
-							defaultCurrent={1}
-							total={data?.total} />
-
-					</div>
-				</div>
-				{/* card */}
-
-			</div>
-
-
-			{/* Modal with Cancel and Save button*/}
-			<Modal
-                open={open}
-                title="SERVICE INFORMATION"
-                okText="Save"
-                cancelText="Cancel"
-                okButtonProps={{
-                    autoFocus: true,
-                    htmlType: 'submit',
-                }}
-                onCancel={() => setOpen(false)}
-                destroyOnHidden
-                modalRender={(dom) => (
-                    <Form
-                        layout="vertical"
-                        form={form}
-                        name="form_in_modal"
-						autoComplete='off'
-                        initialValues={{
-							name: '',
-							description: '',
-                            active: true,
-                        }}
-                        clearOnDestroy
-                        onFinish={(values) => onFinish(values)}
-                    >
-                        {dom}
-                    </Form>
-                )}
+            <Button
+              type="primary"
+              icon={<FileAddOutlined />}
+              className="ml-auto"
+              onClick={openNew}
             >
-                <Form.Item
-                    name="name"
-                    label="Service Name"
-                    validateStatus={errors.name ? 'error' : ''}
-                    help={errors.name ? errors.name[0] : ''}
-                >
-                    <Input placeholder="Service Name"/>
-                </Form.Item>
+              New Service
+            </Button>
+          </div>
 
-				<Form.Item
-                    name="description"
-                    label="Description"
-                    validateStatus={errors.description ? 'error' : ''}
-                    help={errors.description ? errors.description[0] : ''}
-                >
-                    <Input.TextArea placeholder="Description"/>
-                </Form.Item>
+          {/* Table */}
+          <Table
+            dataSource={data?.data ?? []}
+            rowKey="id"
+            loading={isFetching}
+            pagination={false}
+            locale={{ emptyText: 'No services found' }}
+          >
+            <Column title="ID" dataIndex="id" width={80} />
+            <Column title="Service" dataIndex="name" />
+            <Column title="Description" dataIndex="description" />
+            <Column
+              title="Status"
+              dataIndex="active"
+              render={(active) =>
+                active ? <Tag color="green">ACTIVE</Tag> : <Tag color="red">INACTIVE</Tag>
+              }
+            />
+            <Column
+              title="Action"
+              width={120}
+              render={(_, record: Service) => (
+                <Space>
+                  <Button
+                    icon={<EditOutlined />}
+                    onClick={() => openEdit(record.id)}
+                  />
+                  <Button
+                    danger
+                    icon={<DeleteOutlined />}
+                    onClick={() =>
+                      modal.confirm({
+                        title: 'Delete service?',
+                        icon: <QuestionCircleOutlined />,
+                        content: 'This action cannot be undone.',
+                        onOk: () => handleDelete(record.id),
+                      })
+                    }
+                  />
+                </Space>
+              )}
+            />
+          </Table>
 
-                <Form.Item
-                    name="active"
-                    valuePropName="checked"
-                >
-                    <Checkbox>Active</Checkbox>
-                </Form.Item>
+          {/* Pagination */}
+          <div className="flex justify-end mt-4">
+            <Pagination
+              current={page}
+              pageSize={PER_PAGE}
+              total={data?.total}
+              onChange={setPage}
+            />
+          </div>
+        </div>
+      </div>
 
-            </Modal>
+      {/* Modal */}
+      <Modal
+        open={open}
+        title={id ? 'Edit Service' : 'New Service'}
+        okText="Save"
+        cancelText="Cancel"
+        confirmLoading={saving}
+        onCancel={closeModal}
+        okButtonProps={{ htmlType: 'submit' }}
+        destroyOnClose
+        modalRender={(dom) => (
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={onFinish}
+            initialValues={{ active: true }}
+          >
+            {dom}
+          </Form>
+        )}
+      >
+        <Form.Item
+          name="name"
+          label="Service Name"
+          validateStatus={errors.name ? 'error' : ''}
+          help={errors.name?.[0]}
+        >
+          <Input placeholder="Service name" />
+        </Form.Item>
 
-		</>
-	)
+        <Form.Item
+          name="description"
+          label="Description"
+          validateStatus={errors.description ? 'error' : ''}
+          help={errors.description?.[0]}
+        >
+          <Input.TextArea rows={3} />
+        </Form.Item>
+
+        <Form.Item name="active" valuePropName="checked">
+          <Checkbox>Active</Checkbox>
+        </Form.Item>
+      </Modal>
+    </>
+  )
 }
 
-AdminServiceIndex.layout = (page:any) => <AdminLayout user={page.props.auth.user}>{page}</AdminLayout>
-export default AdminServiceIndex;
+AdminServiceIndex.layout = (page: any) => (
+  <AdminLayout user={page.props.auth.user}>{page}</AdminLayout>
+)
+
+export default AdminServiceIndex

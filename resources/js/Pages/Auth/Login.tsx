@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 
@@ -18,7 +18,7 @@ export default function Login() {
 
     axios.post('/login', values)
       .then(() => {
-        router.visit('/');
+        router.visit('/login');
       })
       .catch(err => {
         const serverErrors = err.response?.data?.errors || {};

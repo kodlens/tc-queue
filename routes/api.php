@@ -15,3 +15,4 @@ Route::get('/queue/{queue_number}', [App\Http\Controllers\Api\QueueController::c
 
 
 Route::get('/get-services', [App\Http\Controllers\Api\ServiceController::class, 'getServices']); //get services
+Route::get('/get-pending-stats', [App\Http\Controllers\Api\QueueController::class, 'getPendingStats']);

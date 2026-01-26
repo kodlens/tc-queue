@@ -92,4 +92,20 @@ class QueueController extends Controller
             }),
         ]);
     }
+
+
+    public function getPendingStats()
+    {
+        $data = Queue::whereIn('status', ['waiting', 'processing'])
+            ->select('status')
+            ->selectRaw('COUNT(*) as total')
+            ->groupBy('status')
+            ->get()
+            ->keyBy('status');
+
+        return response()->json([
+            'waiting' => $data['waiting']->total ?? 0,
+            'processing' => $data['processing']->total ?? 0,
+        ]);
+    }
 }
