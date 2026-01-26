@@ -1,5 +1,3 @@
-import React, {memo} from 'react'
-
 const PanelSideBarLogo = ( { collapse } : { collapse?:boolean }) => {
   return (
     <div className="demo-logo-vertical my-10 mx-4">

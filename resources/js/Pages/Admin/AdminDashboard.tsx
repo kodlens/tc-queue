@@ -1,11 +1,6 @@
-import ArticleByQuarterCard from '@/Components/Reports/ArticleByQuarterCard';
-import ArticlesByStatusChart from '@/Components/Reports/ArticleByStatusChart';
-import PublicationTimelinessTable from '@/Components/Reports/PublicationTimelinessTable';
 import AdminLayout from '@/Layouts/AdminLayout'
 import { PageProps } from '@/types'
 import { Head } from '@inertiajs/react'
-import React, { PropsWithChildren, ReactNode } from 'react'
-
 
 
 const AdminDashboard = ({ auth }: PageProps)  =>{

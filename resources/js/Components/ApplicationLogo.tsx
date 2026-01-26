@@ -1,16 +1,15 @@
-import { Link, Head } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 
-export default function ApplicationLogo({className=''}) {
-    return (
-        <>
-            <div className="flex gap-2 `${className}">
-                <div className="">
-                    <Link href="/">
-                        <img src="/img/app-logo_black.png" alt="dost-stii logo" />
-                    </Link>
-                </div>
-            </div>
-           
-        </>
-    );
+export default function ApplicationLogo({ className = '' }) {
+  return (
+    <div className={`flex justify-center ${className}`}>
+      <Link href="/" className="flex justify-center">
+        <img
+          className="h-[100px]"
+          src="/img/tc-logo.png"
+          alt="Tangub City logo"
+        />
+      </Link>
+    </div>
+  );
 }

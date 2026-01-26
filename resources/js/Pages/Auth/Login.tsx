@@ -1,8 +1,8 @@
-import { useEffect, FormEventHandler, useState, ChangeEvent } from 'react';
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
+import { Head, router } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 
-import { InfoCircleOutlined, LoginOutlined } from '@ant-design/icons';
+import {  LoginOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 
 import axios from 'axios';
@@ -26,13 +26,12 @@ export default function Login() {
 
     setErrors({})
 
-    axios.post('/km/login', values).then(res => {
+    axios.post('/km/login', values).then(() => {
       router.visit('/km/login')
     }).catch(err => {
       setErrors(err.response.data.errors)
       form.resetFields()
       setLoading(false)
-
     })
 
   };
@@ -45,7 +44,7 @@ export default function Login() {
 
         <div className='bg-white p-6 shadow-lg rounded-md w-full m-3 sm:w-[400px]'>
           <div className='mb-5'>
-            {/* <ApplicationLogo></ApplicationLogo> */}
+            <ApplicationLogo></ApplicationLogo>
           </div>
 
           <div className='font-bold text-xl mb-7 text-center'>SIGN IN TO YOUR ACCOUNT</div>
