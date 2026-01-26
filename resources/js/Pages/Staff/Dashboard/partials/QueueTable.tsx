@@ -27,7 +27,7 @@ export default function QueueTable() {
 
 
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ['queues'],
+    queryKey: ['queues', page],
     queryFn: async() => {
       const params = new URLSearchParams({
         page: page.toString()
@@ -234,7 +234,6 @@ export default function QueueTable() {
           }}
         />
 
-
        </Table>
 
        <div className="flex">
@@ -244,6 +243,7 @@ export default function QueueTable() {
               setPage(value)
             }}
             defaultCurrent={1}
+            pageSize={data ? data?.per_page : 10}
             total={data?.total}
           />
         </div>
