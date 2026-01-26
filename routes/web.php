@@ -91,6 +91,7 @@ Route::prefix('admin')->middleware('auth', 'admin')->group(function () {
 Route::prefix('staff')->middleware('auth', 'staff')->group(function () {
 
     Route::get('/dashboard', [App\Http\Controllers\Staff\StaffDashboardController::class, 'index'])->name('staff.dashboard.index');
+    Route::get('/dashboard/queues-stats', [App\Http\Controllers\Staff\StaffDashboardController::class, 'stats']);
 
     Route::resource('/documents', App\Http\Controllers\Staff\StaffDocumentController::class);
 

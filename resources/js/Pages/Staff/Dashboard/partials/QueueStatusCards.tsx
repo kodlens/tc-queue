@@ -4,35 +4,52 @@ import {
   SyncOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons'
+import axios from 'axios'
+import { useQuery } from '@tanstack/react-query'
 
-const stats = [
-  {
-    title: 'Waiting',
-    count: 12,
-    color: 'orange',
-    gradient: 'linear-gradient(135deg, #ff9f43, #ff6f00)',
-    icon: <ClockCircleOutlined />,
-  },
-  {
-    title: 'Processing',
-    count: 7,
-    color: 'blue',
-    gradient: 'linear-gradient(135deg, #4facfe, #00c6ff)',
-    icon: <SyncOutlined spin />,
-  },
-  {
-    title: 'Completed',
-    count: 34,
-    color: 'green',
-    gradient: 'linear-gradient(135deg, #43e97b, #38f9d7)',
-    icon: <CheckCircleOutlined />,
-  },
-]
+
 
 export default function QueueStatusCards() {
+
+
+  const { data } = useQuery({
+     queryKey: ['queue-stats', ],
+    queryFn: async () => {
+      const res = await axios.get('/staff/dashboard/queues-stats')
+      return res.data
+    },
+    refetchInterval: 10000,        // ⏱ every 10 seconds
+    refetchOnWindowFocus: true
+  })
+
+
+  const cards = [
+    {
+      title: 'Waiting',
+      count: data ? data.waiting : 0,
+      color: 'orange',
+      gradient: 'linear-gradient(135deg, #ff9f43, #ff6f00)',
+      icon: <ClockCircleOutlined />,
+    },
+    {
+      title: 'Processing',
+      count: data ? data.processing : 0,
+      color: 'blue',
+      gradient: 'linear-gradient(135deg, #4facfe, #00c6ff)',
+      icon: <SyncOutlined spin />,
+    },
+    {
+      title: 'Completed',
+      count: data ? data.completed : 0,
+      color: 'green',
+      gradient: 'linear-gradient(135deg, #43e97b, #38f9d7)',
+      icon: <CheckCircleOutlined />,
+    },
+  ]
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {stats.map((item) => (
+      {cards.map((item) => (
         <Card
           key={item.title}
           className="shadow-md"
