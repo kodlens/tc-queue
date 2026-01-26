@@ -1,7 +1,9 @@
 import { Modal, App } from 'antd'
+import axios from 'axios'
 import { useState } from 'react'
 
 type ActionConfirmModalProps = {
+  id?: number
   open: boolean
   action: 'processing' | 'completed'
   onConfirm: () => Promise<void>
@@ -10,6 +12,7 @@ type ActionConfirmModalProps = {
 }
 
 export default function ActionConfirmModal({
+  id,
   open,
   action,
   onConfirm,
@@ -22,12 +25,29 @@ export default function ActionConfirmModal({
   const handleConfirm = async () => {
     setLoading(true)
     try {
-      await onConfirm()
-      notification.success({
-        message: `Queue ${action === 'processing' ? 'started' : 'completed'}!`,
-        description: `Queue ${itemRef} successfully ${action === 'processing' ? 'started processing' : 'marked as completed'}.`,
-        placement: 'bottomRight',
-      })
+      onConfirm()
+      if(action === 'processing') {
+        await axios.post('/staff/queue/start-processing/' +  id).then(res => {
+          if(res.data.status === 'process') {
+            notification.success({
+              description: `Queue ${itemRef} successfully started processing.`,
+              placement: 'bottomRight',
+              message: 'Process Started',
+            })
+          }
+        })
+      }else if (action === 'completed') {
+        await axios.post('/staff/queue/mark-completed/' + id).then(res => {
+          if(res.data.status === 'completed') {
+             notification.success({
+              description: `Queue ${itemRef} successfully completed.`,
+              placement: 'bottomRight',
+              message: 'Process Completed',
+            })
+          }
+        })
+      }
+
       setLoading(false)
       onCancel()
     } catch (err) {

@@ -19,6 +19,7 @@ import { QueueItem } from '@/types'
 
 
 
+
 const statusColor: Record<string, string> = {
   waiting: 'default',
   processing: 'blue',
@@ -29,16 +30,16 @@ export default function QueueDetailsDrawer({
   open,
   onClose,
   data,
+  onRefresh
 }: {
   open: boolean
   onClose: () => void
   data: QueueItem | null
+  onRefresh: ()=> void
 }) {
 
   const [actionModalOpen, setActionModalOpen] = useState(false)
   const [actionType, setActionType] = useState<'processing' | 'completed'>('processing')
-
-  console.log(data);
 
   return (
     <>
@@ -153,13 +154,11 @@ export default function QueueDetailsDrawer({
       <ActionConfirmModal
         open={actionModalOpen}
         action={actionType}
+        id={data?.id}
         itemRef={data?.queue_number ? data.queue_number : ''}
         onCancel={() => setActionModalOpen(false)}
         onConfirm={async () => {
-          // Simulate API call
-          await new Promise((resolve) => setTimeout(resolve, 1000))
-          // Here you would call your backend to update status
-          console.log('Action performed:', actionType)
+          onRefresh()
         }}
       />
 

@@ -251,6 +251,9 @@ export default function QueueTable() {
       {/* Drawer for View Details */}
       {selected && (
         <QueueDetailsDrawer
+          onRefresh={()=> {
+            refetch()
+          }}
           open={drawerOpen}
           data={selected}
           onClose={() => setDrawerOpen(false)}
