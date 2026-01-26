@@ -18,6 +18,7 @@ class QueueController extends Controller
             'currentStep',
             'serviceSteps'
         ])->where('queue_number', 'like', '%' . $req->search . '%')
+        ->orderBy('id', 'desc')
         ->paginate($perpage);
 
         return $data;

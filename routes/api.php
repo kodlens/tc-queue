@@ -13,3 +13,5 @@ Route::get('/user', function (Request $request) {
 Route::post('/queue', [App\Http\Controllers\Api\QueueController::class, 'store']);
 Route::get('/queue/{queue_number}', [App\Http\Controllers\Api\QueueController::class, 'show']); //get queue status
 
+
+Route::get('/get-services', [App\Http\Controllers\Api\ServiceController::class, 'getServices']); //get services
