@@ -8,8 +8,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-
-
 Route::post('/queue', [App\Http\Controllers\Api\QueueController::class, 'store']);
 Route::get('/queue/{queue_number}', [App\Http\Controllers\Api\QueueController::class, 'show']); //get queue status
 
