@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Queue;
 use App\Models\Service;
-
+use Illuminate\Http\JsonResponse;
 
 class QueueController extends Controller
 {
@@ -107,5 +107,32 @@ class QueueController extends Controller
             'waiting' => $data['waiting']->total ?? 0,
             'processing' => $data['processing']->total ?? 0,
         ]);
+    }
+
+
+    public function getTransactionByStatus(string $status):JsonResponse{
+         if (empty($status)) {
+            return response()->json([
+                'errors' => [
+                    'status' => ['Status is required.']
+                ],
+                'message' => 'Status is required.'
+            ], 422);
+        }
+
+        $data = Queue::join('services as b', 'queues.service_id', '=', 'b.id')
+            ->join('service_steps as c', 'queues.current_step_id', '=', 'c.id')
+            ->where('status', $status)
+            ->select('queues.id as queue_id', 'queue_number', 'reference_no',
+                'client_name', 'status', 'priority',
+                'b.name as service', 'c.name as current_step',
+                'requesting_office',
+                'queues.completed_at',
+                'queues.claimed_at',
+                'queues.created_at')
+            ->get();
+
+        return response()->json($data);
+
     }
 }

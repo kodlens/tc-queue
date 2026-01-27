@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('service_id');
             $table->unsignedBigInteger('current_step_id')->nullable();
 
-            $table->enum('status', ['waiting', 'processing', 'on_hold', 'returned', 'completed', 'cancelled'])->default('waiting');
+            $table->enum('status', ['waiting', 'processing', 'on_hold', 'returned', 'completed', 'cancelled', 'claimed'])->default('waiting');
             $table->enum('priority', ['normal', 'urgent'])->default('normal');
 
             $table->foreign('service_id')
@@ -35,6 +35,7 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->timestamp('completed_at')->nullable();
+            $table->timestamp('claimed_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

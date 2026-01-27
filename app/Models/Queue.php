@@ -18,6 +18,7 @@ class Queue extends Model
         'current_step_id',
         'status',
         'completed_at',
+        'claimed_at'
     ];
 
     public function service()
