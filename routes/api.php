@@ -18,3 +18,4 @@ Route::get('/get-services', [App\Http\Controllers\Api\ServiceController::class, 
 Route::get('/get-pending-stats', [App\Http\Controllers\Api\QueueController::class, 'getPendingStats']);
 
 Route::get('/get-transaction-status/{status}', [App\Http\Controllers\Api\QueueController::class, 'getTransactionByStatus']); //get services
+Route::get('/get-transaction-waiting-processing', [App\Http\Controllers\Api\QueueController::class, 'getTransactionByWaitingProcessing']); //get services

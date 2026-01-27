@@ -135,4 +135,25 @@ class QueueController extends Controller
         return response()->json($data);
 
     }
+
+
+    public function getTransactionByWaitingProcessing():JsonResponse{
+
+        $data = Queue::join('services as b', 'queues.service_id', '=', 'b.id')
+            ->join('service_steps as c', 'queues.current_step_id', '=', 'c.id')
+            ->whereIn('status', ['waiting', 'processing'])
+            ->select('queues.id as queue_id', 'queue_number', 'reference_no',
+                'client_name', 'status', 'priority',
+                'b.name as service', 'c.name as current_step',
+                'requesting_office',
+                'queues.completed_at',
+                'queues.claimed_at',
+                'queues.created_at')
+            ->get();
+
+        return response()->json($data);
+
+    }
+
+
 }
