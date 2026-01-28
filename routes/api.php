@@ -19,3 +19,4 @@ Route::get('/get-transaction-status/{status}', [App\Http\Controllers\Api\QueueCo
 Route::get('/get-transaction-waiting-processing', [App\Http\Controllers\Api\QueueController::class, 'getTransactionByWaitingProcessing']); //get services
 
 
+Route::get('/get-signatory', [App\Http\Controllers\Api\SignatoryController::class, 'getSignatory']);
