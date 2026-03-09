@@ -28,6 +28,7 @@ import axios from 'axios'
 import AdminLayout from '@/Layouts/AdminLayout'
 import CardTitle from '@/Components/CardTitle'
 import { useQuery } from '@tanstack/react-query'
+import ModalCreateEditServiceStep from './partials/ModalCreateEditServiceStep'
 
 const { Column } = Table
 const { Search } = Input
@@ -47,6 +48,7 @@ const AdminServiceStepIndex = () => {
   const [id, setId] = useState<number | null>(null)
   const [loadingForm, setLoadingForm] = useState(false)
 
+
   /* ================= QUERY ================= */
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['service-steps', page, PER_PAGE, search],
@@ -64,7 +66,7 @@ const AdminServiceStepIndex = () => {
 
   /* ================= MODAL HANDLERS ================= */
   const openNew = () => {
-    setId(null)
+    setId(0)
     setErrors({})
     form.resetFields()
     setOpen(true)
@@ -193,7 +195,7 @@ const AdminServiceStepIndex = () => {
               className="md:ml-auto"
               onClick={openNew}
             >
-              New Service
+              New Service Step
             </Button>
           </div>
 
@@ -289,53 +291,13 @@ const AdminServiceStepIndex = () => {
       </div>
 
       {/* Modal */}
-      <Modal
+      <ModalCreateEditServiceStep
         open={open}
-        title={id ? 'Edit Service' : 'New Service'}
-        okText={id ? 'Update Service' : 'Create Service'}
-        cancelText="Cancel"
-        confirmLoading={saving || loadingForm}
-        onCancel={closeModal}
-        maskClosable={false}
-        width={560}
-        okButtonProps={{ htmlType: 'submit' }}
-        destroyOnClose
-        modalRender={(dom) => (
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={onFinish}
-            initialValues={{ active: true }}
-            disabled={loadingForm}
-          >
-            {dom}
-          </Form>
-        )}
-      >
-        <Form.Item
-          name="name"
-          label="Service Name"
-          validateStatus={errors.name ? 'error' : ''}
-          help={errors.name?.[0]}
-          rules={[{ required: true, message: 'Service name is required.' }]}
-        >
-          <Input placeholder="Service name" />
-        </Form.Item>
-
-        <Form.Item
-          name="description"
-          label="Description"
-          validateStatus={errors.description ? 'error' : ''}
-          help={errors.description?.[0]}
-          rules={[{ required: true, message: 'Description is required.' }]}
-        >
-          <Input.TextArea rows={4} showCount maxLength={250} />
-        </Form.Item>
-
-        <Form.Item name="active" valuePropName="checked">
-          <Checkbox>Active</Checkbox>
-        </Form.Item>
-      </Modal>
+        form={form}
+        id={id}
+        errors={errors}
+        closeModal={closeModal}
+        onFinish={onFinish} />
     </>
   )
 }
