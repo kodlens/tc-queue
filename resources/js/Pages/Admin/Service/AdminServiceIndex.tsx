@@ -5,6 +5,8 @@ import {
   DeleteOutlined,
   EditOutlined,
   QuestionCircleOutlined,
+  ReloadOutlined,
+  SearchOutlined,
 } from '@ant-design/icons'
 import {
   Space,
@@ -17,6 +19,9 @@ import {
   Checkbox,
   Tag,
   App,
+  Tooltip,
+  Typography,
+  Empty,
 } from 'antd'
 import { useState } from 'react'
 import axios from 'axios'
@@ -26,6 +31,7 @@ import { useQuery } from '@tanstack/react-query'
 
 const { Column } = Table
 const { Search } = Input
+const { Text } = Typography
 
 const PER_PAGE = 10
 
@@ -39,6 +45,7 @@ const AdminServiceIndex = () => {
   const [search, setSearch] = useState('')
   const [errors, setErrors] = useState<any>({})
   const [id, setId] = useState<number | null>(null)
+  const [loadingForm, setLoadingForm] = useState(false)
 
   /* ================= QUERY ================= */
   const { data, isFetching, refetch } = useQuery({
@@ -67,30 +74,44 @@ const AdminServiceIndex = () => {
     setId(id)
     setErrors({})
     setOpen(true)
+    setLoadingForm(true)
 
-    const res = await axios.get(`/admin/services/${id}`)
-    form.setFieldsValue({
-      name: res.data.name,
-      description: res.data.description,
-      active: !!res.data.active,
-    })
+    try {
+      const res = await axios.get(`/admin/services/${id}`)
+      form.setFieldsValue({
+        name: res.data.name,
+        description: res.data.description,
+        active: !!res.data.active,
+      })
+    } finally {
+      setLoadingForm(false)
+    }
   }
 
   const closeModal = () => {
     setOpen(false)
     setErrors({})
     form.resetFields()
+    setLoadingForm(false)
   }
 
   /* ================= DELETE ================= */
   const handleDelete = async (id: number) => {
-    await axios.delete(`/admin/services/${id}`)
-    notification.success({
-      message: 'Deleted',
-      description: 'Service successfully deleted.',
-      placement: 'bottomRight',
-    })
-    refetch()
+    try {
+      await axios.delete(`/admin/services/${id}`)
+      notification.success({
+        message: 'Deleted',
+        description: 'Service successfully deleted.',
+        placement: 'bottomRight',
+      })
+      refetch()
+    } catch {
+      notification.error({
+        message: 'Delete failed',
+        description: 'Unable to delete this service right now.',
+        placement: 'bottomRight',
+      })
+    }
   }
 
   /* ================= SAVE ================= */
@@ -116,6 +137,12 @@ const AdminServiceIndex = () => {
 
         const firstError = Object.keys(serverErrors)[0]
         form.scrollToField(firstError)
+      } else {
+        notification.error({
+          message: 'Save failed',
+          description: 'Unable to save service right now.',
+          placement: 'bottomRight',
+        })
       }
     } finally {
       setSaving(false)
@@ -128,12 +155,16 @@ const AdminServiceIndex = () => {
       <Head title="Services Management" />
 
       <div className="flex justify-center mt-10">
-        <div className="w-full max-w-5xl bg-white p-6 rounded-xl shadow-sm mx-3">
-
+        <div className="w-full max-w-6xl bg-white p-6 rounded-2xl shadow-sm mx-3 border border-slate-100">
           <CardTitle title="LIST OF SERVICES" />
+          <div className="mb-4 mt-1">
+            <Text type="secondary">
+              Manage service offerings, availability, and descriptions from one place.
+            </Text>
+          </div>
 
           {/* Toolbar */}
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-4 items-center">
             <Search
               placeholder="Search services..."
               allowClear
@@ -141,14 +172,25 @@ const AdminServiceIndex = () => {
                 setPage(1)
                 setSearch(v)
               }}
+              enterButton={<SearchOutlined />}
               loading={isFetching}
-              className="max-w-sm"
+              className="w-full md:w-[360px]"
             />
+            <Button
+              icon={<ReloadOutlined />}
+              onClick={() => refetch()}
+              loading={isFetching}
+            >
+              Refresh
+            </Button>
+            <Text className="text-slate-500 text-sm md:ml-2">
+              {data?.total ?? 0} total services
+            </Text>
 
             <Button
               type="primary"
               icon={<FileAddOutlined />}
-              className="ml-auto"
+              className="md:ml-auto"
               onClick={openNew}
             >
               New Service
@@ -161,39 +203,66 @@ const AdminServiceIndex = () => {
             rowKey="id"
             loading={isFetching}
             pagination={false}
-            locale={{ emptyText: 'No services found' }}
+            size="middle"
+            scroll={{ x: 760 }}
+            locale={{
+              emptyText: (
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description="No services found"
+                />
+              ),
+            }}
           >
             <Column title="ID" dataIndex="id" width={80} />
             <Column title="Service" dataIndex="name" />
-            <Column title="Description" dataIndex="description" />
+            <Column
+              title="Description"
+              dataIndex="description"
+              render={(description: string) => (
+                <Tooltip title={description || '-'}>
+                  <span className="block max-w-[380px] truncate">{description || '-'}</span>
+                </Tooltip>
+              )}
+            />
             <Column
               title="Status"
               dataIndex="active"
               render={(active) =>
-                active ? <Tag color="green">ACTIVE</Tag> : <Tag color="red">INACTIVE</Tag>
+                active ? (
+                  <Tag color="success">ACTIVE</Tag>
+                ) : (
+                  <Tag color="default">INACTIVE</Tag>
+                )
               }
             />
             <Column
               title="Action"
-              width={120}
+              width={140}
               render={(_, record: Service) => (
                 <Space>
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => openEdit(record.id)}
-                  />
-                  <Button
-                    danger
-                    icon={<DeleteOutlined />}
-                    onClick={() =>
-                      modal.confirm({
-                        title: 'Delete service?',
-                        icon: <QuestionCircleOutlined />,
-                        content: 'This action cannot be undone.',
-                        onOk: () => handleDelete(record.id),
-                      })
-                    }
-                  />
+                  <Tooltip title="Edit service">
+                    <Button
+                      icon={<EditOutlined />}
+                      onClick={() => openEdit(record.id)}
+                    />
+                  </Tooltip>
+                  <Tooltip title="Delete service">
+                    <Button
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() =>
+                        modal.confirm({
+                          title: 'Delete service?',
+                          icon: <QuestionCircleOutlined />,
+                          content: 'This action cannot be undone.',
+                          okText: 'Delete',
+                          okButtonProps: { danger: true },
+                          onOk: () => handleDelete(record.id),
+                        })
+                      }
+                    />
+                  </Tooltip>
                 </Space>
               )}
             />
@@ -206,6 +275,8 @@ const AdminServiceIndex = () => {
               pageSize={PER_PAGE}
               total={data?.total}
               onChange={setPage}
+              showTotal={(total, range) => `${range[0]}-${range[1]} of ${total}`}
+              showSizeChanger={false}
             />
           </div>
         </div>
@@ -215,10 +286,12 @@ const AdminServiceIndex = () => {
       <Modal
         open={open}
         title={id ? 'Edit Service' : 'New Service'}
-        okText="Save"
+        okText={id ? 'Update Service' : 'Create Service'}
         cancelText="Cancel"
-        confirmLoading={saving}
+        confirmLoading={saving || loadingForm}
         onCancel={closeModal}
+        maskClosable={false}
+        width={560}
         okButtonProps={{ htmlType: 'submit' }}
         destroyOnClose
         modalRender={(dom) => (
@@ -227,6 +300,7 @@ const AdminServiceIndex = () => {
             layout="vertical"
             onFinish={onFinish}
             initialValues={{ active: true }}
+            disabled={loadingForm}
           >
             {dom}
           </Form>
@@ -237,6 +311,7 @@ const AdminServiceIndex = () => {
           label="Service Name"
           validateStatus={errors.name ? 'error' : ''}
           help={errors.name?.[0]}
+          rules={[{ required: true, message: 'Service name is required.' }]}
         >
           <Input placeholder="Service name" />
         </Form.Item>
@@ -246,8 +321,9 @@ const AdminServiceIndex = () => {
           label="Description"
           validateStatus={errors.description ? 'error' : ''}
           help={errors.description?.[0]}
+          rules={[{ required: true, message: 'Description is required.' }]}
         >
-          <Input.TextArea rows={3} />
+          <Input.TextArea rows={4} showCount maxLength={250} />
         </Form.Item>
 
         <Form.Item name="active" valuePropName="checked">
