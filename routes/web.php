@@ -64,6 +64,9 @@ Route::prefix('admin')->middleware('auth', 'admin')->group(function () {
     Route::resource('/services', App\Http\Controllers\Admin\AdminServiceController::class)->names('admin.services');
     Route::get('/get-services', [App\Http\Controllers\Admin\AdminServiceController::class, 'getData'])->name('admin.services.get-data');
 
+    Route::resource('/service-steps', App\Http\Controllers\Admin\AdminServiceStepController::class)->names('admin.service-steps');
+    Route::get('/get-service-steps', [App\Http\Controllers\Admin\AdminServiceStepController::class, 'getData'])->name('admin.service-steps.get-data');
+
 
     Route::resource('/roles', App\Http\Controllers\Admin\AdminRoleController::class)->names('admin.roles');
     Route::get('/get-roles', [App\Http\Controllers\Admin\AdminRoleController::class, 'getData'])->name('admin.roles.get-data');
