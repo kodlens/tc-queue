@@ -19,6 +19,7 @@ class User extends Authenticatable
         'lname',
         'fname',
         'mname',
+        'sex',
         'email',
         'password',
         'active',

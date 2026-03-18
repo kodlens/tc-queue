@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('lname')->nullabe();
             $table->string('fname')->nullabe();
             $table->string('mname')->nullabe();
+            $table->string('sex', 20)->nullable();
             $table->string('role', 20)->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

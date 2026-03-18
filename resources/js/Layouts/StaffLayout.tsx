@@ -10,7 +10,7 @@ import {
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
-import { LogOut } from 'lucide-react';
+import { KeySquare, LogOut } from 'lucide-react';
 
 const { Header, Sider, Content } = Layout;
 
@@ -105,6 +105,13 @@ export default function StaffLayout({
       label: 'My Account',
       onClick: () => router.visit('/my-account'),
     },
+    {
+      key: 'staff.change-password',
+      icon: <KeySquare size={15} />,
+      label: 'Change Password',
+      onClick: () => router.visit('/change-password'),
+    },
+    
   ];
 
   return (

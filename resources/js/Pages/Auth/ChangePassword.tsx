@@ -18,7 +18,7 @@ export default function ChangePassword() {
     setErrors({})
     axios.post('/change-password', values).then(res => {
       if (res.data.status === "changed") {
-        modal.info({
+        modal.success({
           title: "Success!",
           content: <div>Password successfully changed.</div>,
           onOk() {
@@ -32,6 +32,7 @@ export default function ChangePassword() {
 
     }).catch(err => {
       if (err.response.status === 422) {
+        setLoading(false)
         setErrors(err.response.data.errors)
       }
     })

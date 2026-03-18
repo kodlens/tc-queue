@@ -15,12 +15,12 @@ class ChangePasswordController extends Controller
     public function index(){
         $user = Auth::user();
 
-        if($user->role == 'publisher'){
-            return Inertia::render('Publisher/PublisherChangePassword');
+        if(strtolower($user->role) == 'admin'){
+            return Inertia::render('Admin/AdminChangePassword');
         }
 
-        if($user->role == 'author'){
-            return Inertia::render('Author/AuthorChangePassword');
+        if(strtolower($user->role) == 'staff'){
+            return Inertia::render('Staff/StaffChangePassword');
         }
 
         

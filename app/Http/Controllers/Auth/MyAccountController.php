@@ -14,13 +14,15 @@ class MyAccountController extends Controller
 
         $user = Auth::user();
 
-        if($user->role == 'publisher'){
-            return Inertia::render('Auth/MyAccount', []);
+        if(strtolower($user->role) == 'admin'){
+            return Inertia::render('Admin/AdminMyAccount', []);
+            
         }
 
-        if($user->role == 'author'){
-            return Inertia::render('Auth/MyAccount', []);
+        if(strtolower($user->role) == 'staff'){
+            return Inertia::render('Staff/StaffMyAccount', []);
         }
+        
 
     }
 
@@ -29,20 +31,19 @@ class MyAccountController extends Controller
 
         $req->validate([
             'username' => ['required', 'unique:users,username,' .$user->id .',id'],
-            'lastname' => ['required', 'max:100', 'string'],
-            'firstname' => ['required', 'max:100', 'string'],
-            'middlename' => ['max:100'],
-            'sex' => ['required', 'max:100', 'string']
+            'lname' => ['required', 'max:100', 'string'],
+            'fname' => ['required', 'max:100', 'string'],
+            'mname' => ['max:100'],
+            'sex' => ['required', 'max:20', 'string']
         ]);
 
 
         $data = User::find($user->id);
         $data->username = $req->username;
-        $data->lastname = $req->lastname;
-        $data->firstname = $req->firstname;
-        $data->middlename = $req->middlename;
+        $data->lname = $req->lname;
+        $data->fname = $req->fname;
+        $data->mname = $req->mname;
         $data->sex = $req->sex;
-        $data->bio = $req->bio;
         $data->save();
 
         return response()->json([

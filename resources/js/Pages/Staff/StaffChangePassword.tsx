@@ -9,7 +9,6 @@ export default function StaffChangePassword( ) {
 
         <>
             <Head title="Change Password"></Head>
-            <Head title="My Account"></Head>
             <ChangePassword></ChangePassword>
         </>
     )
