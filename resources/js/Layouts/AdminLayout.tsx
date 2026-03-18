@@ -95,12 +95,12 @@ export default function AdminLayout({
     //   ],
     // },
     { type: 'divider' },
-    {
-      key: 'admin.roles',
-      icon: <Shield size={16}/> ,
-      label: 'Roles',
-      onClick: () => router.visit('/admin/roles'),
-    },
+    // {
+    //   key: 'admin.roles',
+    //   icon: <Shield size={16}/> ,
+    //   label: 'Roles',
+    //   onClick: () => router.visit('/admin/roles'),
+    // },
     {
       key: 'admin.users',
       icon: <UserOutlined />,
