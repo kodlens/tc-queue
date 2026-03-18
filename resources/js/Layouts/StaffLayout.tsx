@@ -5,6 +5,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DashboardOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
@@ -66,7 +67,7 @@ export default function StaffLayout({
     //   label: 'Service Steps',
     //   onClick: () => router.visit('/staff/service-steps'),
     // },
-    //{ type: 'divider' },
+    { type: 'divider' },
 
     //{ type: 'divider' },
     // {
@@ -98,12 +99,12 @@ export default function StaffLayout({
     //   label: 'Roles',
     //   onClick: () => router.visit('/staff/roles'),
     // },
-    // {
-    //   key: 'staff.users',
-    //   icon: <UserOutlined />,
-    //   label: 'Users',
-    //   onClick: () => router.visit('/staff/users'),
-    // },
+    {
+      key: 'staff.my-account',
+      icon: <UserOutlined />,
+      label: 'My Account',
+      onClick: () => router.visit('/my-account'),
+    },
   ];
 
   return (

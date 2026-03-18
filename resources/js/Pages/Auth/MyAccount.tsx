@@ -55,9 +55,6 @@ export default function MyAccount( {auth} : PageProps ) {
                 firstname: '',
                 middlename: '',
                 sex: '',
-                email: '',
-                bio: '',
-                contact: '',
             }}>
 
                 <Form.Item label="USERNAME"
