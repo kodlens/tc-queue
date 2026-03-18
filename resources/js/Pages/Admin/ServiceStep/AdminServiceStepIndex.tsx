@@ -20,6 +20,7 @@ import {
   Tooltip,
   Typography,
   Empty,
+  Select,
 } from 'antd'
 import { useState } from 'react'
 import axios from 'axios'
@@ -34,7 +35,7 @@ const { Text } = Typography
 
 const PER_PAGE = 10
 
-const AdminServiceStepIndex = () => {
+const AdminServiceStepIndex = ( { services }: { services: Service[] }) => {
   const [form] = Form.useForm()
   const { notification, modal } = App.useApp()
 
@@ -44,16 +45,18 @@ const AdminServiceStepIndex = () => {
   const [errors, setErrors] = useState<any>({})
   const [id, setId] = useState<number>(0)
   const [loading, setLoading] = useState(false)
+  const [filterServices, setFilterServices] = useState<number>(0)
 
 
   /* ================= QUERY ================= */
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ['service-steps', page, PER_PAGE, search],
+    queryKey: ['service-steps', page, PER_PAGE, search, filterServices],
     queryFn: async () => {
       const params = {
         perpage: PER_PAGE,
         page,
         search,
+        services: filterServices,
       }
       const res = await axios.get('/admin/get-service-steps', { params })
       return res.data
@@ -97,7 +100,7 @@ const AdminServiceStepIndex = () => {
     try {
       await axios.delete(`/admin/service-steps/${id}`).then(res => {
         setLoading(false)
-        if(res.data.success === 'deleted') {
+        if(res.data.status === 'deleted') {
           notification.success({ message: 'Deleted successfully' })
         } else {
           notification.error({ message: 'Delete failed', description: res.data.message })
@@ -123,7 +126,7 @@ const AdminServiceStepIndex = () => {
       if (id > 0) {
         await axios.put(`/admin/service-steps/${id}`, values).then(res => {
           setLoading(false)
-          if(res.data.success === 'updated') {
+          if(res.data.status === 'updated') {
             notification.success({ message: 'Updated successfully' })
             closeModal()
             refetch()
@@ -131,12 +134,11 @@ const AdminServiceStepIndex = () => {
             notification.error({ message: 'Update failed', description: res.data.message })
           }
         })
-        notification.success({ message: 'Updated successfully' })
       } else {
         await axios.post('/admin/service-steps', values).then(res => {
           setLoading(false)
 
-          if(res.data.success === 'saved') {
+          if(res.data.status === 'saved') {
             notification.success({ message: 'Created successfully' })
             closeModal()
             refetch()
@@ -165,6 +167,10 @@ const AdminServiceStepIndex = () => {
     } 
   }
 
+  const onChangeService = (value: number) => {
+    setFilterServices(value)
+  }
+
   /* ================= RENDER ================= */
   return (
     <>
@@ -180,6 +186,16 @@ const AdminServiceStepIndex = () => {
           </div>
 
           {/* Toolbar */}
+          <div className='font-bold'>
+            Select Service
+          </div>
+          <div className='my-2'>
+            <Select className='w-full' options={services.map(item => ({
+              label: item.name,
+              value: item.id,
+            }))} 
+            onChange={onChangeService} allowClear/>
+          </div>
           <div className="flex flex-wrap gap-2 mb-4 items-center">
             <Search
               placeholder="Search services..."

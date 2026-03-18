@@ -13,11 +13,20 @@ use Inertia\Response;
 class AdminServiceStepController extends Controller
 {
     public function index(){
-        return Inertia::render('Admin/ServiceStep/AdminServiceStepIndex');
+        $services = Service::where('active', 1)->get(['id', 'name']);
+
+        return Inertia::render('Admin/ServiceStep/AdminServiceStepIndex', [
+            'services' => $services
+        ]);
     }
 
     public function getData(Request $request){
         $serviceSteps = ServiceStep::with('service')
+            ->whereHas('service', function($query) use ($request) {
+                if($request->has('services') && !empty($request->input('services'))) {
+                    $query->where('id', $request->input('services'));
+                }
+            })
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
@@ -26,15 +35,28 @@ class AdminServiceStepController extends Controller
 
 
     public function store(Request $req){
-
-        $validatedData = $req->validate([
+        $validate = $req->validate([
             'service_id' => ['required'],
             'name' => ['required', 'string', 'max:255'],
+            'step_order' => ['required', 'integer'],
         ]);
 
+        $exists = ServiceStep::where('service_id', $validate['service_id'])
+            ->where('step_order', $req->input('step_order'))
+            ->exists();
+
+        if($exists) {
+            return response()->json([
+                'errors' => [
+                    'step_order' => ['Step order already exists for this service.']
+                ],
+                'message' => 'Step order already exists for this service.'
+            ], 422);
+        }
+
         $serviceStep = ServiceStep::create([
-            'service_id' => $validatedData['service_id'],
-            'name' => $validatedData['name'],
+            'service_id' => $validate['service_id'],
+            'name' => $validate['name'],
             'step_order' => $req->input('step_order'),
             'sla_minutes' => $req->input('sla_minutes'),
         ]);
