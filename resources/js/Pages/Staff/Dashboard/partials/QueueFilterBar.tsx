@@ -72,7 +72,7 @@ export default function QueueFilterBar({
             ]}
           />
 
-          <Select
+          {/* <Select
             allowClear
             placeholder="Priority"
             style={{ width: 160 }}
@@ -84,7 +84,7 @@ export default function QueueFilterBar({
               { label: 'Normal', value: 'normal' },
               { label: 'Urgent', value: 'urgent' },
             ]}
-          />
+          /> */}
         </Space>
 
         <div className='flex gap-2'>
