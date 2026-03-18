@@ -13,7 +13,7 @@ use App\Http\Controllers\Base\DocumentController;
 class StaffQueueController extends QueueController
 {
     public function index(){
-        return Inertia::render('Staff/StaffDocumentIndex');
+        return Inertia::render('Staff/MyQueue/StaffMyQueueIndex');
     }
 
 }

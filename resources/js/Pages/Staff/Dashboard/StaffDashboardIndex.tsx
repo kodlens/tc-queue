@@ -4,7 +4,6 @@ import { Head } from "@inertiajs/react";
 import { ReactNode } from "react";
 // import StatusCards from "./partials/StatusCards";
 import QueueStatusCards from "./partials/QueueStatusCards";
-import QueueTable from "./partials/QueueTable";
 
 
 export default function StaffDashboardIndex({ auth }: PageProps) {
@@ -22,7 +21,6 @@ export default function StaffDashboardIndex({ auth }: PageProps) {
 
         <QueueStatusCards />
 
-        <QueueTable />
 
       </div>
     </>

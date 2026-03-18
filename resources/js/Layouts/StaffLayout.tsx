@@ -10,7 +10,7 @@ import {
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
-import { KeySquare, LogOut } from 'lucide-react';
+import { KeySquare, LogOut, Rows4 } from 'lucide-react';
 
 const { Header, Sider, Content } = Layout;
 
@@ -27,7 +27,7 @@ const siderStyle: React.CSSProperties = {
 ======================= */
 type MenuItem = Required<MenuProps>['items'][number];
 
-interface AdminLayoutProps {
+interface LayoutProps {
   user: {
     fname: string;
     lname: string;
@@ -37,7 +37,7 @@ interface AdminLayoutProps {
 export default function StaffLayout({
   user,
   children,
-}: PropsWithChildren<AdminLayoutProps>) {
+}: PropsWithChildren<LayoutProps>) {
   const { post } = useForm();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -54,6 +54,13 @@ export default function StaffLayout({
       icon: <DashboardOutlined />,
       label: 'Dashboard',
       onClick: () => router.visit('/staff/dashboard'),
+    },
+
+    {
+      key: 'staff.my-queue',
+      icon: <Rows4 size={15}  />,
+      label: 'My Queue',
+      onClick: () => router.visit('/staff/queues'),
     },
     // {
     //   key: 'staff.documents',
@@ -122,8 +129,9 @@ export default function StaffLayout({
       <Sider
         trigger={null}
         collapsible
-        collapsed={!collapsed}
+        collapsed={collapsed}
         width={300}
+        breakpoint='md'
         style={siderStyle}
         onBreakpoint={(broken) => setCollapsed(broken)}
       >

@@ -96,9 +96,7 @@ Route::prefix('staff')->middleware('auth', 'staff')->group(function () {
 
     Route::resource('/documents', App\Http\Controllers\Staff\StaffDocumentController::class);
 
-
-    Route::resource('/queues', App\Http\Controllers\Staff\StaffQueueController::class);
-    Route::resource('/queues', App\Http\Controllers\Staff\StaffQueueController::class);
+    Route::resource('/queues', App\Http\Controllers\Staff\StaffQueueController::class)->names('staff.queues');
     Route::get('/get-queues', [App\Http\Controllers\Staff\StaffQueueController::class, 'getData'])->name('staff.queues.get-data');
     
     Route::post('/queue/start-processing/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'startProcess'])->name('staff.queue.start-process');
