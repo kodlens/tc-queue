@@ -127,9 +127,12 @@ export default function QueueTable() {
   return (
     <>
 
-      <QueueFilterBar onChange={handleFilterChange} onRefresh={refetch}/>
+      <div className="mb-4">
+        <QueueFilterBar onChange={handleFilterChange} onRefresh={refetch}/>
 
-      <Table
+      </div>
+
+      <Table 
         dataSource={data ? data?.data : []}
         className='overflow-auto'
         loading={isFetching}

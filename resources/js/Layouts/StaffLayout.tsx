@@ -57,9 +57,9 @@ export default function StaffLayout({
     },
 
     {
-      key: 'staff.my-queue',
+      key: 'staff.queues',
       icon: <Rows4 size={15}  />,
-      label: 'My Queue',
+      label: 'My Queues',
       onClick: () => router.visit('/staff/queues'),
     },
     // {

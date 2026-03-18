@@ -85,17 +85,18 @@ export default function QueueFilterBar({
               { label: 'Urgent', value: 'urgent' },
             ]}
           /> */}
-        </Space>
-
-        <div className='flex gap-2'>
-          {/* Right side actions */}
           <Button
             danger
             icon={<DeleteOutlined />}
             onClick={resetFilters}
           >
-            Reset
+            
           </Button>
+        </Space>
+
+        <div className='flex gap-2'>
+          {/* Right side actions */}
+          
 
           <Button
             icon={<ReloadOutlined />}

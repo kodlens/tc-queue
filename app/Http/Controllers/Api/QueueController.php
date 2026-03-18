@@ -39,8 +39,8 @@ class QueueController extends Controller
 
             $queue = Queue::create([
                 'queue_number' => $queueNumber,
-                'client_name' => $validated['client_name'],
-                'requesting_office' => $validated['requesting_office'],
+                'client_name' => strtoupper($validated['client_name']),
+                'requesting_office' => strtoupper($validated['requesting_office']),
                 'service_id' => $serviceId,
                 'status' => 'waiting',
             ]);
