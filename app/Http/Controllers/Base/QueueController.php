@@ -65,4 +65,15 @@ class QueueController extends Controller
             'status' => 'moved'
         ]);
     }
+
+    public function markClaimed($id){
+        $queue = Queue::find($id);
+        $queue->status = 'claimed';
+        $queue->claimed_at = now();
+        $queue->save();
+
+        return response()->json([
+            'status' => 'claimed'
+        ]);
+    }
 }

@@ -104,6 +104,7 @@ Route::prefix('staff')->middleware('auth', 'staff')->group(function () {
     Route::post('/queue/start-processing/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'startProcess'])->name('staff.queue.start-process');
     Route::post('/queue/mark-completed/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'markCompleted'])->name('staff.queue.mark-completed');
     Route::post('/queue/move-to-step/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'moveToStep'])->name('staff.queue.move-to-step');
+    Route::post('/queue/mark-claimed/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'markClaimed'])->name('staff.queue.mark-claimed');
 
 });
 

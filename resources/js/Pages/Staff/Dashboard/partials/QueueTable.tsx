@@ -2,7 +2,7 @@ import { Table, Dropdown, Button, Tag, MenuProps, App, Pagination } from 'antd'
 import { MoreOutlined, EyeOutlined, SyncOutlined, CheckOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import QueueDetailsDrawer from './QueueDetailsDrawer'
-import { Footprints } from 'lucide-react'
+import { Footprints, Mail } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Column from 'antd/es/table/Column'
@@ -55,6 +55,9 @@ export default function QueueTable() {
     else if (type === 'completed') {
       markAsCompleted(queue)
     }
+    else if(type === 'claimed') {
+      markClaimed(queue)
+    }
 
   }
 
@@ -99,6 +102,21 @@ export default function QueueTable() {
           description: `Queue ${queue.queue_number} step moved successfully.`,
           placement: 'bottomRight',
           message: 'Move Successfully',
+        })
+      }
+      setMenuLoading(false)
+      refetch()
+    })
+  }
+
+  const markClaimed = async(queue: QueueItem) => {
+    setMenuLoading(true)
+    await axios.post('/staff/queue/mark-claimed/' + queue.id).then(res => {
+      if(res.data.status === 'claimed') {
+         notification.success({
+          description: `Queue ${queue.queue_number} marked as claimed successfully.`,
+          placement: 'bottomRight',
+          message: 'Marked Claimed',
         })
       }
       setMenuLoading(false)
@@ -223,6 +241,13 @@ export default function QueueTable() {
                   label: step?.name,
                   onClick: () => handleMoveStep(record, step),
                 })),
+              },
+              {
+                key: 'claimed',
+                label: 'Claimed',
+                icon: <Mail size={15}/>,
+                disabled: record.status !== 'processing',
+                onClick: () => handleAction('claimed', record),
               },
             ]
 
