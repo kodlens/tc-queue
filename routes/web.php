@@ -42,6 +42,9 @@ Route::middleware('auth')->group(function () {
 
     /** ====================REPORTS======================== */
 
+    //Route::get('/reports/queue-status-summary', [App\Http\Controllers\ReportController::class, 'getQueueStatusSummary']);
+    Route::get('/reports/processing-time', [App\Http\Controllers\ReportController::class, 'getAverageProcessingTime']);
+    Route::get('/reports/processing-time-per-service', [App\Http\Controllers\ReportController::class, 'getProcessingTimePerService']);
     // Route::get('/reports/articles-by-quarter', [ReportController::class, 'articlesByQuarter']);
     // Route::get('/reports/articles-by-status', [ReportController::class, 'articlesByStatus']);
     // Route::get('/reports/publication-timeliness', [ReportController::class, 'publicationTimeliness']);

@@ -8,50 +8,58 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
-    public function articlesByQuarter(){
+    
+    // public function getQueueStatusSummary()
+    // {
+    //     $summary = \DB::table('queues')
+    //         ->selectRaw("
+    //             COUNT(*) as total,
+    //             SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
+    //             SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) as in_progress,
+    //             SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed
+    //         ")
+    //         ->first();
 
-         $currentYear = Carbon::now()->year;
-        $minYear = $currentYear - 2; // Last 4 years including current
+    //     return response()->json($summary);
+    // }
 
-        $data = DB::table('posts')
-            ->select('YEAR', 'quarter_id', DB::raw('COUNT(*) as total_published'))
-            ->where('status', 'publish') // Assuming 1 = Published
-            ->where('is_archived', false)
-            ->where('trash', false)
-            ->where('YEAR', '>=', $minYear)
-            ->groupBy('YEAR', 'quarter_id')
-            ->orderByDesc('YEAR')
-            ->orderBy('quarter_id')
+    public function getAverageProcessingTime()
+    {
+        $data = \DB::table('queues')
+            ->whereNotNull('completed_at')
+            ->selectRaw("
+                AVG(TIMESTAMPDIFF(HOUR, created_at, completed_at)) as avg_hours,
+                MIN(TIMESTAMPDIFF(HOUR, created_at, completed_at)) as min_hours,
+                MAX(TIMESTAMPDIFF(HOUR, created_at, completed_at)) as max_hours
+            ")
+            ->first();
+
+        return response()->json($data);
+    }
+
+
+    public function getProcessingTimePerService()
+    {
+        $data = \DB::table('queues')
+            ->join('services', 'queues.service_id', '=', 'services.id')
+            ->whereNotNull('queues.completed_at')
+            ->select(
+                'services.id',
+                'services.name'
+            )
+            ->selectRaw("
+                COUNT(*) as total_requests,
+                AVG(TIMESTAMPDIFF(HOUR, queues.created_at, queues.completed_at)) as avg_hours,
+                MIN(TIMESTAMPDIFF(HOUR, queues.created_at, queues.completed_at)) as min_hours,
+                MAX(TIMESTAMPDIFF(HOUR, queues.created_at, queues.completed_at)) as max_hours
+            ")
+            ->groupBy('services.id', 'services.name')
+            ->orderByDesc('avg_hours') // 🔥 slowest first
             ->get();
 
         return response()->json($data);
     }
 
 
-    public function articlesByStatus()
-    {
-        $data = DB::table('posts')
-            ->select('status', DB::raw('COUNT(*) as total'))
-            ->where('trash', false)
-            ->groupBy('status')
-            ->orderBy('status')
-            ->get();
-
-        return response()->json($data);
-    }
-
-    public function publicationTimeliness()
-    {
-        return DB::table('posts')
-            ->select('id', 'title', 'created_at', 'publication_date',
-                    DB::raw('DATEDIFF(publication_date, created_at) as days_to_publish'))
-            ->where('status', 'publish')
-            ->whereNotNull('created_at')
-            ->whereNotNull('publication_date')
-            ->where('trash', false)
-            ->orderByDesc('days_to_publish')
-            ->limit(50)
-            ->get();
-    }
 
 }

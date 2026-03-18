@@ -4,6 +4,8 @@ import { Head } from "@inertiajs/react";
 import { ReactNode } from "react";
 // import StatusCards from "./partials/StatusCards";
 import QueueStatusCards from "./partials/QueueStatusCards";
+import AverageProcessingTime from "@/Components/Reports/AverageProcessingTime";
+import ProcessingTImePerService from "@/Components/Reports/ProcessingTImePerService";
 
 
 export default function StaffDashboardIndex({ auth }: PageProps) {
@@ -21,6 +23,11 @@ export default function StaffDashboardIndex({ auth }: PageProps) {
 
         <QueueStatusCards />
 
+        {/* <QueueSummaryStatus /> */}
+
+        <AverageProcessingTime />
+
+        <ProcessingTImePerService />
 
       </div>
     </>
