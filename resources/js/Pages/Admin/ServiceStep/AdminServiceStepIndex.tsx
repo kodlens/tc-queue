@@ -21,6 +21,7 @@ import {
   Typography,
   Empty,
   Select,
+  Tag,
 } from 'antd'
 import { useState } from 'react'
 import axios from 'axios'
@@ -76,16 +77,6 @@ const AdminServiceStepIndex = ( { services }: { services: Service[] }) => {
     setId(id)
     setErrors({})
     setOpen(true)
-
-    try {
-      const res = await axios.get(`/admin/service-steps/${id}`)
-      form.setFieldsValue({
-        name: res.data.name,
-        description: res.data.description,
-        active: !!res.data.active,
-      })
-    } finally {
-    }
   }
 
   const closeModal = () => {
@@ -264,7 +255,10 @@ const AdminServiceStepIndex = ( { services }: { services: Service[] }) => {
                 </Tooltip>
               )}
             />
-            {/* <Column
+            <Column title="Order No." dataIndex="step_order" width={100}/>
+            <Column title="SLA" dataIndex="sla_minutes" width={100}/>
+
+            <Column
               title="Status"
               dataIndex="active"
               render={(active) =>
@@ -274,7 +268,7 @@ const AdminServiceStepIndex = ( { services }: { services: Service[] }) => {
                   <Tag color="default">INACTIVE</Tag>
                 )
               }
-            /> */}
+            />
             <Column
               title="Action"
               width={140}

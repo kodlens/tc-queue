@@ -20,6 +20,11 @@ class AdminServiceStepController extends Controller
         ]);
     }
 
+    public function show($id){
+        $serviceStep = ServiceStep::findOrFail($id);
+        return response()->json($serviceStep, 200);
+    }
+
     public function getData(Request $request){
         $serviceSteps = ServiceStep::with('service')
             ->whereHas('service', function($query) use ($request) {
