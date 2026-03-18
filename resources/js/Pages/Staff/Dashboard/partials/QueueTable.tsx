@@ -178,14 +178,16 @@ export default function QueueTable() {
                   ? 'default'
                   : status === 'processing'
                   ? 'blue'
-                  : 'green'
+                  : status === 'claimed'
+                  ? 'green'
+                  : 'orange'
               }
             >
               {status.toUpperCase()}
             </Tag>
           )}
         />
-        <Column
+        {/* <Column
           title="Priority"
           dataIndex="priority"
           key="priority"
@@ -202,7 +204,7 @@ export default function QueueTable() {
               {priority.toUpperCase()}
             </Tag>
           )}
-        />
+        /> */}
         <Column
           title="Actions"
           key="actions"
@@ -225,13 +227,6 @@ export default function QueueTable() {
                 onClick: () => handleAction('processing', record),
               },
               {
-                key: 'completed',
-                label: 'Mark Completed',
-                icon: <CheckOutlined />,
-                disabled: record.status !== 'processing',
-                onClick: () => handleAction('completed', record),
-              },
-              {
                 key: 'set-step',
                 icon: <Footprints size={15} />,
                 label: 'Set Step',
@@ -243,10 +238,17 @@ export default function QueueTable() {
                 })),
               },
               {
+                key: 'completed',
+                label: 'Mark Completed',
+                icon: <CheckOutlined />,
+                disabled: record.status !== 'processing',
+                onClick: () => handleAction('completed', record),
+              },
+              {
                 key: 'claimed',
                 label: 'Claimed',
                 icon: <Mail size={15}/>,
-                disabled: record.status !== 'processing',
+                disabled: record.status === 'claimed' || record.status === 'waiting' || record.status === 'processing',
                 onClick: () => handleAction('claimed', record),
               },
             ]
