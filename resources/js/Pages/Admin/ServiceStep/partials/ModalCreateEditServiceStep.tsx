@@ -41,8 +41,8 @@ const ModalCreateEditServiceStep = ( { open, form, errors, id, closeModal, onFin
   return (
     <Modal
         open={open}
-        title={id ? 'Edit Service' : 'New Service'}
-        okText={id ? 'Update Service' : 'Create Service'}
+        title={id ? 'Edit Service Step' : 'New Service Step'}
+        okText={id ? 'Update Service Step' : 'Create Service Step'}
         cancelText="Cancel"
         confirmLoading={loading}
         onCancel={closeModal}
@@ -64,7 +64,7 @@ const ModalCreateEditServiceStep = ( { open, form, errors, id, closeModal, onFin
       >
 
          <Form.Item
-          name="services"
+          name="service_id"
           label="Service Name"
           validateStatus={errors.service_id ? 'error' : ''}
           help={errors.service_id?.[0]}
@@ -91,13 +91,21 @@ const ModalCreateEditServiceStep = ( { open, form, errors, id, closeModal, onFin
         </Form.Item>
 
         <Form.Item
-          name="description"
-          label="Description"
-          validateStatus={errors.description ? 'error' : ''}
-          help={errors.description?.[0]}
-          rules={[{ required: true, message: 'Description is required.' }]}
+          name="step_order"
+          label="Step Order"
+          validateStatus={errors.step_order ? 'error' : ''}
+          help={errors.step_order?.[0]}
         >
-          <Input.TextArea rows={4} showCount maxLength={250} />
+          <Input type='number' placeholder='e.g. 1' />
+        </Form.Item>
+
+        <Form.Item
+          name="sla_minutes"
+          label="SLA (minutes)"
+          validateStatus={errors.sla_minutes ? 'error' : ''}
+          help={errors.sla_minutes?.[0]}
+        >
+          <Input type='number' placeholder='e.g. 10' />
         </Form.Item>
 
         <Form.Item name="active" valuePropName="checked">

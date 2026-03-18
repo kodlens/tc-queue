@@ -39,12 +39,11 @@ const AdminServiceStepIndex = () => {
   const { notification, modal } = App.useApp()
 
   const [open, setOpen] = useState(false)
-  const [saving, setSaving] = useState(false)
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [errors, setErrors] = useState<any>({})
-  const [id, setId] = useState<number | null>(null)
-  const [loadingForm, setLoadingForm] = useState(false)
+  const [id, setId] = useState<number>(0)
+  const [loading, setLoading] = useState(false)
 
 
   /* ================= QUERY ================= */
@@ -74,17 +73,15 @@ const AdminServiceStepIndex = () => {
     setId(id)
     setErrors({})
     setOpen(true)
-    setLoadingForm(true)
 
     try {
-      const res = await axios.get(`/admin/services/${id}`)
+      const res = await axios.get(`/admin/service-steps/${id}`)
       form.setFieldsValue({
         name: res.data.name,
         description: res.data.description,
         active: !!res.data.active,
       })
     } finally {
-      setLoadingForm(false)
     }
   }
 
@@ -92,23 +89,26 @@ const AdminServiceStepIndex = () => {
     setOpen(false)
     setErrors({})
     form.resetFields()
-    setLoadingForm(false)
   }
 
   /* ================= DELETE ================= */
   const handleDelete = async (id: number) => {
+    setLoading(true)
     try {
-      await axios.delete(`/admin/services/${id}`)
-      notification.success({
-        message: 'Deleted',
-        description: 'Service successfully deleted.',
-        placement: 'bottomRight',
+      await axios.delete(`/admin/service-steps/${id}`).then(res => {
+        setLoading(false)
+        if(res.data.success === 'deleted') {
+          notification.success({ message: 'Deleted successfully' })
+        } else {
+          notification.error({ message: 'Delete failed', description: res.data.message })
+        }
       })
       refetch()
     } catch {
+      setLoading(false)
       notification.error({
         message: 'Delete failed',
-        description: 'Unable to delete this service right now.',
+        description: 'Unable to delete this service step right now.',
         placement: 'bottomRight',
       })
     }
@@ -117,20 +117,38 @@ const AdminServiceStepIndex = () => {
   /* ================= SAVE ================= */
   const onFinish = async (values: Service) => {
     try {
-      setSaving(true)
+      setLoading(true)
       setErrors({})
 
-      if (id) {
-        await axios.put(`/admin/services/${id}`, values)
+      if (id > 0) {
+        await axios.put(`/admin/service-steps/${id}`, values).then(res => {
+          setLoading(false)
+          if(res.data.success === 'updated') {
+            notification.success({ message: 'Updated successfully' })
+            closeModal()
+            refetch()
+          } else {
+            notification.error({ message: 'Update failed', description: res.data.message })
+          }
+        })
         notification.success({ message: 'Updated successfully' })
       } else {
-        await axios.post('/admin/services', values)
-        notification.success({ message: 'Saved successfully' })
-      }
+        await axios.post('/admin/service-steps', values).then(res => {
+          setLoading(false)
 
-      closeModal()
-      refetch()
+          if(res.data.success === 'saved') {
+            notification.success({ message: 'Created successfully' })
+            closeModal()
+            refetch()
+          } else {
+            notification.error({ message: 'Creation failed', description: res.data.message })
+          }
+        })
+      }
+    
     } catch (err: any) {
+      setLoading(false)
+
       if (err.response?.status === 422) {
         const serverErrors = err.response.data.errors
         setErrors(serverErrors)
@@ -140,13 +158,11 @@ const AdminServiceStepIndex = () => {
       } else {
         notification.error({
           message: 'Save failed',
-          description: 'Unable to save service right now.',
+          description: 'Unable to save service step right now.',
           placement: 'bottomRight',
         })
       }
-    } finally {
-      setSaving(false)
-    }
+    } 
   }
 
   /* ================= RENDER ================= */
@@ -190,6 +206,7 @@ const AdminServiceStepIndex = () => {
             <Button
               type="primary"
               icon={<FileAddOutlined />}
+              loading={loading}
               className="md:ml-auto"
               onClick={openNew}
             >

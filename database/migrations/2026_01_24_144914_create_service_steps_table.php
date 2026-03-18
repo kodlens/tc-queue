@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('name', 255)->nullable();
             $table->integer('step_order')->default(0);
             $table->integer('sla_minutes')->nullable();
+            $table->tinyInteger('active')->nullable();
             $table->index('service_id'); //index for better performance
             $table->timestamps();
         });

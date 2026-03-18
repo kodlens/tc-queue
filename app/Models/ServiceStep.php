@@ -12,7 +12,8 @@ class ServiceStep extends Model
     protected $fillable = [
         'service_id',
         'name',
-        'step_order'
+        'step_order',
+        'active'
     ];
 
     public function service()
