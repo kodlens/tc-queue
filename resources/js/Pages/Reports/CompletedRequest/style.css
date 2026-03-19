@@ -1,0 +1,120 @@
+/* RESET */
+html, body {
+  background: #fff !important;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+/* MAIN CONTAINER */
+.report-container {
+  width: 900px;
+  margin: 20px auto;
+  padding: 30px;
+  background: #fff;
+
+  /* makes footer stick to bottom */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* HEADER */
+.report-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.report-header h3,
+.report-header h4 {
+  margin: 0;
+  font-weight: normal;
+}
+
+.report-header h2 {
+  margin: 10px 0;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* TABLE */
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.print-table th,
+.print-table td {
+  border: 1px solid #000;
+  padding: 6px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.print-table th {
+  font-weight: bold;
+}
+
+/* FOOTER */
+.report-footer {
+  margin-top: auto; /* push footer to bottom */
+}
+
+.signatures {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.signatures div {
+  width: 40%;
+  text-align: center;
+}
+
+/* CONTROLS */
+.no-print {
+  margin-bottom: 15px;
+}
+
+.no-print input,
+.no-print button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+/* PRINT SETTINGS */
+@media print {
+  html, body {
+    background: #fff !important;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .report-container {
+    width: 100%;
+    margin: 0;
+    padding: 15px;
+    min-height: auto;
+  }
+
+  .no-print {
+    display: none;
+  }
+
+  /* remove gray areas / ensure colors print properly */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  @page {
+    size: auto;
+    margin: 15mm;
+  }
+}

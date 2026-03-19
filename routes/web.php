@@ -45,6 +45,11 @@ Route::middleware('auth')->group(function () {
     //Route::get('/reports/queue-status-summary', [App\Http\Controllers\ReportController::class, 'getQueueStatusSummary']);
     Route::get('/reports/processing-time', [App\Http\Controllers\ReportController::class, 'getAverageProcessingTime']);
     Route::get('/reports/processing-time-per-service', [App\Http\Controllers\ReportController::class, 'getProcessingTimePerService']);
+
+    Route::get('/reports/completed-request-reports', [App\Http\Controllers\Reports\CompletedRequestController::class, 'index'])->name('reports.completed-request-reports');
+    Route::get('/reports/get-completed-requests', [App\Http\Controllers\Reports\CompletedRequestController::class, 'getCompletedRequests'])->name('reports.get-completed-requests');
+
+    
     // Route::get('/reports/articles-by-quarter', [ReportController::class, 'articlesByQuarter']);
     // Route::get('/reports/articles-by-status', [ReportController::class, 'articlesByStatus']);
     // Route::get('/reports/publication-timeliness', [ReportController::class, 'publicationTimeliness']);
@@ -69,6 +74,13 @@ Route::prefix('admin')->middleware('auth', 'admin')->group(function () {
 
     Route::resource('/service-steps', App\Http\Controllers\Admin\AdminServiceStepController::class)->names('admin.service-steps');
     Route::get('/get-service-steps', [App\Http\Controllers\Admin\AdminServiceStepController::class, 'getData'])->name('admin.service-steps.get-data');
+
+    Route::resource('/queues', App\Http\Controllers\Admin\AdminQueueController::class)->names('admin.queues');
+    Route::get('/get-queues', [App\Http\Controllers\Admin\AdminQueueController::class, 'getData'])->name('admin.queues.get-data');
+    
+
+    Route::resource('/roles', App\Http\Controllers\Admin\AdminRoleController::class)->names('admin.roles');
+    Route::get('/get-roles', [App\Http\Controllers\Admin\AdminRoleController::class, 'getData'])->name('admin.roles.get-data');
 
 
     Route::resource('/roles', App\Http\Controllers\Admin\AdminRoleController::class)->names('admin.roles');

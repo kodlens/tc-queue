@@ -10,7 +10,7 @@ import {
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
-import { KeySquare, LogOut, Rows4 } from 'lucide-react';
+import { BookCopy, KeySquare, LogOut, Rows4 } from 'lucide-react';
 
 const { Header, Sider, Content } = Layout;
 
@@ -117,6 +117,29 @@ export default function StaffLayout({
       icon: <KeySquare size={15} />,
       label: 'Change Password',
       onClick: () => router.visit('/change-password'),
+    },
+
+    {
+      key: 'reports',
+      icon: <BookCopy size={15} />,
+      label: 'Reports',
+      children: [
+        {
+          key: 'reports.completed-request-reports',
+          label: 'Completed Request Reports',
+          onClick: () => router.visit('/reports/completed-request-reports'),
+        },
+        // {
+        //   key: 'staff.posts.featureds',
+        //   label: 'Featured Posts',
+        //   onClick: () => router.visit('/staff/post-featured'),
+        // },
+        // {
+        //   key: 'staff.posts.archives',
+        //   label: 'Archives',
+        //   onClick: () => router.visit('/staff/post-archives'),
+        // },
+      ],
     },
     
   ];

@@ -12,7 +12,7 @@ import {
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
-import { LogOut } from 'lucide-react';
+import { ListMinus, LogOut } from 'lucide-react';
 
 const { Header, Sider, Content } = Layout;
 
@@ -68,6 +68,12 @@ export default function AdminLayout({
       icon: <BarsOutlined />,
       label: 'Service Steps',
       onClick: () => router.visit('/admin/service-steps'),
+    },
+    {
+      key: 'admin.queues',
+      icon: <ListMinus size={15} />,
+      label: 'Queues',
+      onClick: () => router.visit('/admin/queues'),
     },
     //{ type: 'divider' },
 
