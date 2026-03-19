@@ -12,7 +12,7 @@ import {
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
-import { LogOut, Shield } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 const { Header, Sider, Content } = Layout;
 
