@@ -1,31 +1,19 @@
+import ProcessingTImePerService from '@/Components/Reports/ProcessingTImePerService'
 import AdminLayout from '@/Layouts/AdminLayout'
-import { PageProps } from '@/types'
 import { Head } from '@inertiajs/react'
 
 
-const AdminDashboard = ({ auth }: PageProps)  =>{
+const AdminDashboard = ()  =>{
    // const fullName = `${auth.user.fname} ${auth.user.mname ?? ''} ${auth.user.lname}`.trim();
     return (
         <>
 
             <Head title="Dashboard"/>
             <div className="py-6 px-4 sm:px-6 lg:px-8 space-y-6">
-                <div>
-                    <h1 className="text-2xl font-semibold text-gray-800">Admin Dashboard</h1>
-                    <p className="text-gray-600">Welcome, { auth.user?.lname }, { auth.user?.fname }</p>
-                </div>
 
-                <div className="bg-white rounded-2xl shadow p-6">
-                    <h2 className="text-xl font-medium text-gray-700 mb-4">Quarterly Publication Report</h2>
-                    {/* <ArticleByQuarterCard /> */}
-                </div>
-
-                <div className="bg-white rounded-2xl shadow p-6">
-                    {/* <ArticlesByStatusChart /> */}
-                </div>
-
-                <div className="bg-white rounded-2xl shadow p-6">
-                    {/* <PublicationTimelinessTable /> */}
+                <div className="p-4 sm:p-6 lg:p-8 bg-white shadow rounded-lg">
+                    <div className='font-bold mb-2'>PROCESSING TIME AVERAGE</div>
+                    <ProcessingTImePerService />
                 </div>
             </div>
         </>
