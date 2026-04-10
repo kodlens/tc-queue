@@ -121,7 +121,7 @@ class QueueController extends Controller
         }
 
         $data = Queue::join('services as b', 'queues.service_id', '=', 'b.id')
-            ->join('service_steps as c', 'queues.current_step_id', '=', 'c.id')
+            ->leftJoin('service_steps as c', 'queues.current_step_id', '=', 'c.id')
             ->where('status', $status)
             ->select('queues.id as queue_id', 'queue_number', 'reference_no',
                 'client_name', 'status', 'priority',
