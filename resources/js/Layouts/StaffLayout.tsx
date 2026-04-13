@@ -64,10 +64,10 @@ export default function StaffLayout({
       label: 'My Queues',
       children: [
         {
-          key: 'staff.pending-queues',
+          key: 'staff.waiting-queues',
           icon: <Loader size={15}  />,
-          label: 'Pending Queues',
-          onClick: () => router.visit('/staff/pending-queues'),
+          label: 'Waiting Queues',
+          onClick: () => router.visit('/staff/waiting-queues'),
         },
         {
           key: 'staff.processing-queues',
@@ -153,12 +153,14 @@ export default function StaffLayout({
               Menu: {
                 itemColor: '#ffffff',
                 itemHoverColor: '#ffffff',
-                itemSelectedColor: '#ffffff',
+                itemSelectedColor: '#f4f0bd',
 
                 itemHoverBg: 'rgba(255,255,255,0.15)',
                 itemSelectedBg: 'rgba(255,255,255,0.25)',
 
                 subMenuItemBg: 'transparent',
+                subMenuItemSelectedColor: '#ffb82b',
+
                 groupTitleColor: 'rgba(255,255,255,0.7)',
               },
             },

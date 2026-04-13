@@ -115,17 +115,17 @@ Route::prefix('staff')->middleware('auth', 'staff')->group(function () {
     Route::get('/get-queues', [App\Http\Controllers\Staff\StaffQueueController::class, 'getData'])->name('staff.queues.get-data');
 
 
-    Route::resource('/pending-queues', App\Http\Controllers\Staff\StaffPendingQueueController::class)->names('staff.pending-queues');
-    //Route::get('/get-pending-queues', [App\Http\Controllers\Staff\StaffPendingQueueController::class, 'getData'])->name('staff.pending-queues.get-data');
-
-    Route::resource('/claimed-queues', App\Http\Controllers\Staff\StaffClaimedQueueController::class)->names('staff.claimed-queues');
-    //Route::get('/get-claimed-queues', [App\Http\Controllers\Staff\StaffClaimedQueueController::class, 'getData'])->name('staff.claimed-queues.get-data');
+    Route::resource('/waiting-queues', App\Http\Controllers\Staff\StaffWaitingQueueController::class)->names('staff.waiting-queues');
+    //Route::get('/get-waiting-queues', [App\Http\Controllers\Staff\StaffWaitingQueueController::class, 'getData'])->name('staff.waiting-queues.get-data');
 
     Route::resource('/processing-queues', App\Http\Controllers\Staff\StaffProcessingQueueController::class)->names('staff.processing-queues');
     //Route::get('/get-processing-queues', [App\Http\Controllers\Staff\StaffProcessingQueueController::class, 'getData'])->name('staff.processing-queues.get-data');
 
     Route::resource('/completed-queues', App\Http\Controllers\Staff\StaffCompletedQueueController::class)->names('staff.completed-queues');
     //Route::get('/get-completed-queues', [App\Http\Controllers\Staff\StaffCompletedQueueController::class, 'getData'])->name('staff.completed-queues.get-data');
+
+    Route::resource('/claimed-queues', App\Http\Controllers\Staff\StaffClaimedQueueController::class)->names('staff.claimed-queues');
+    //Route::get('/get-claimed-queues', [App\Http\Controllers\Staff\StaffClaimedQueueController::class, 'getData'])->name('staff.claimed-queues.get-data');
 
 
     Route::post('/queue/start-processing/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'startProcess'])->name('staff.queue.start-process');

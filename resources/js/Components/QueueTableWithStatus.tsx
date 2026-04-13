@@ -15,7 +15,7 @@ export type QueueFilters = {
 }
 
 type Props = {
-  status: 'waiting' | 'processing' | 'claimed' | 'completed' | 'pending'
+  status: 'waiting' | 'processing' | 'claimed' | 'completed'
 }
 
 export default function QueueTableWithStatus({ status }: Props) {
@@ -25,8 +25,9 @@ export default function QueueTableWithStatus({ status }: Props) {
   const [selected, setSelected] = useState<QueueItem | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [menuLoading, setMenuLoading] = useState(false);
-  const [page, setPage] = useState(1);
   const [search, setSearch] = useState<QueueFilters>({ queue: '', status: status});
+  const [perPage, setPerPage] = useState(10);
+  const [page, setPage] = useState(1);
 
 
   const { data, isFetching, refetch } = useQuery({
@@ -42,7 +43,10 @@ export default function QueueTableWithStatus({ status }: Props) {
     },
   })
 
-
+  const onPageChange = (index:number, perPage:number) => {
+    setPage(index)
+    setPerPage(perPage)
+  }
 
 
   const handleAction = (type: string, queue: QueueItem) => {
@@ -271,12 +275,13 @@ export default function QueueTableWithStatus({ status }: Props) {
         <div className="flex mt-4 justify-end">
           <Pagination
             className="ml-auto"
-            onChange={(value) => {
-              setPage(value)
-            }}
+            onChange={onPageChange}
             defaultCurrent={1}
-            pageSize={data ? data?.per_page : 10}
+            current={page}
+            pageSize={perPage}
             total={data?.total}
+            showSizeChanger
+            pageSizeOptions={[10, 20, 30, 50]}
           />
         </div>
 

@@ -11,27 +11,7 @@ class StaffCompletedQueueController extends Controller
 {
 
     public function index(){
-        return Inertia::render('Staff/MyQueue/CompletedQueue/StaffCompletedQueueIndex');
+        return Inertia::render('Staff/MyQueue/CompletedQueue/CompletedQueueIndex');
     }
 
-    public function getData(Request $req){
-
-        $req->perpage ? $perpage = $req->perpage : $perpage = 5;
-
-
-        $data = Queue::with([
-            'service',
-            'currentStep',
-            'serviceSteps'
-        ])
-        ->when($req->status, function($q) use ($req){
-            $q->where('status', $req->status);
-        })
-
-        ->where('queue_number', 'like', '%' . $req->search . '%')
-        ->orderBy('id', 'desc')
-        ->paginate($perpage);
-
-        return $data;
-    }
 }

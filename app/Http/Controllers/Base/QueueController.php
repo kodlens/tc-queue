@@ -13,7 +13,6 @@ class QueueController extends Controller
 
         $req->perpage ? $perpage = $req->perpage : $perpage = 5;
 
-
         $data = Queue::with([
             'service',
             'currentStep',
