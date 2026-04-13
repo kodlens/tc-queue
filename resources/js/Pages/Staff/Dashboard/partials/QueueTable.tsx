@@ -41,12 +41,12 @@ export default function QueueTable() {
   })
 
 
-    const handleFilterChange = (filters: QueueFilters) => {
-      console.log('Filters:', filters)
-      setSearch(filters)
-      //refetch()
-      // later: pass to table or backend
-    }
+  const handleFilterChange = (filters: QueueFilters) => {
+    console.log('Filters:', filters)
+    setSearch(filters)
+    //refetch()
+    // later: pass to table or backend
+  }
 
 
   const handleAction = (type: string, queue: QueueItem) => {

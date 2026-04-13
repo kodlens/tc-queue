@@ -10,7 +10,7 @@ import {
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
-import { BookCopy, ChartCandlestick, Check, KeySquare, Loader, LogOut, Rows4, ThumbsUp } from 'lucide-react';
+import { BookCopy, ChartCandlestick, KeySquare, Loader, LogOut, Rows4, ThumbsUp } from 'lucide-react';
 
 const { Header, Sider, Content } = Layout;
 
