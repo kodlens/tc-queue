@@ -57,6 +57,32 @@ export default function StaffLayout({
     },
 
     {
+      key: 'staff.peinding-queues',
+      icon: <Rows4 size={15}  />,
+      label: 'Pending Queues',
+      onClick: () => router.visit('/staff/pending-queues'),
+    },
+    {
+      key: 'staff.processing-queues',
+      icon: <Rows4 size={15}  />,
+      label: 'Processing Queues',
+      onClick: () => router.visit('/staff/processing-queues'),
+    },
+    {
+      key: 'staff.completed-queues',
+      icon: <Rows4 size={15}  />,
+      label: 'Completed Queues',
+      onClick: () => router.visit('/staff/completed-queues'),
+    },
+    {
+      key: 'staff.claimed-queues',
+      icon: <Rows4 size={15}  />,
+      label: 'Claimed Queues',
+      onClick: () => router.visit('/staff/claimed-queues'),
+    },
+
+
+    {
       key: 'staff.queues',
       icon: <Rows4 size={15}  />,
       label: 'My Queues',
@@ -141,7 +167,7 @@ export default function StaffLayout({
         // },
       ],
     },
-    
+
   ];
 
   return (
