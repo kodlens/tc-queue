@@ -56,38 +56,45 @@ export default function StaffLayout({
       onClick: () => router.visit('/staff/dashboard'),
     },
 
-    {
-      key: 'staff.peinding-queues',
-      icon: <Rows4 size={15}  />,
-      label: 'Pending Queues',
-      onClick: () => router.visit('/staff/pending-queues'),
-    },
-    {
-      key: 'staff.processing-queues',
-      icon: <Rows4 size={15}  />,
-      label: 'Processing Queues',
-      onClick: () => router.visit('/staff/processing-queues'),
-    },
-    {
-      key: 'staff.completed-queues',
-      icon: <Rows4 size={15}  />,
-      label: 'Completed Queues',
-      onClick: () => router.visit('/staff/completed-queues'),
-    },
-    {
-      key: 'staff.claimed-queues',
-      icon: <Rows4 size={15}  />,
-      label: 'Claimed Queues',
-      onClick: () => router.visit('/staff/claimed-queues'),
-    },
-
+    { type: 'divider' },
 
     {
       key: 'staff.queues',
       icon: <Rows4 size={15}  />,
       label: 'My Queues',
-      onClick: () => router.visit('/staff/queues'),
+      children: [
+        {
+          key: 'staff.pending-queues',
+          icon: <Rows4 size={15}  />,
+          label: 'Pending Queues',
+          onClick: () => router.visit('/staff/pending-queues'),
+        },
+        {
+          key: 'staff.processing-queues',
+          icon: <Rows4 size={15}  />,
+          label: 'Processing Queues',
+          onClick: () => router.visit('/staff/processing-queues'),
+        },
+        {
+          key: 'staff.completed-queues',
+          icon: <Rows4 size={15}  />,
+          label: 'Completed Queues',
+          onClick: () => router.visit('/staff/completed-queues'),
+        },
+        {
+          key: 'staff.claimed-queues',
+          icon: <Rows4 size={15}  />,
+          label: 'Claimed Queues',
+          onClick: () => router.visit('/staff/claimed-queues'),
+        },
+      ]
+
     },
+
+
+    { type: 'divider' },
+
+
     // {
     //   key: 'staff.documents',
     //   icon: <ProfileOutlined />,

@@ -14,7 +14,7 @@ import {
   CheckCircleOutlined,
 } from '@ant-design/icons'
 import { useState } from 'react'
-import ActionConfirmModal from './ActionConfirmModal'
+import ActionConfirmModal from '../Pages/Staff/Dashboard/partials/ActionConfirmModal'
 import { QueueItem } from '@/types'
 
 

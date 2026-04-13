@@ -1,13 +1,13 @@
 import { Table, Dropdown, Button, Tag, MenuProps, App, Pagination } from 'antd'
 import { MoreOutlined, EyeOutlined, SyncOutlined, CheckOutlined } from '@ant-design/icons'
 import { useState } from 'react'
-import QueueDetailsDrawer from './QueueDetailsDrawer'
+import QueueDetailsDrawer from '../../../../Components/QueueDetailsDrawer'
 import { Footprints, Mail } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import Column from 'antd/es/table/Column'
 import { QueueItem, Step } from '@/types'
-import QueueFilterBar from './QueueFilterBar'
+import QueueFilterBar from '../../../../Components/QueueFilterBar'
 
 
 export type QueueFilters = {

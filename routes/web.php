@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/completed-request-reports', [App\Http\Controllers\Reports\CompletedRequestController::class, 'index'])->name('reports.completed-request-reports');
     Route::get('/reports/get-completed-requests', [App\Http\Controllers\Reports\CompletedRequestController::class, 'getCompletedRequests'])->name('reports.get-completed-requests');
 
-    
+
     // Route::get('/reports/articles-by-quarter', [ReportController::class, 'articlesByQuarter']);
     // Route::get('/reports/articles-by-status', [ReportController::class, 'articlesByStatus']);
     // Route::get('/reports/publication-timeliness', [ReportController::class, 'publicationTimeliness']);
@@ -77,7 +77,7 @@ Route::prefix('admin')->middleware('auth', 'admin')->group(function () {
 
     Route::resource('/queues', App\Http\Controllers\Admin\AdminQueueController::class)->names('admin.queues');
     Route::get('/get-queues', [App\Http\Controllers\Admin\AdminQueueController::class, 'getData'])->name('admin.queues.get-data');
-    
+
 
     Route::resource('/roles', App\Http\Controllers\Admin\AdminRoleController::class)->names('admin.roles');
     Route::get('/get-roles', [App\Http\Controllers\Admin\AdminRoleController::class, 'getData'])->name('admin.roles.get-data');
@@ -113,7 +113,21 @@ Route::prefix('staff')->middleware('auth', 'staff')->group(function () {
 
     Route::resource('/queues', App\Http\Controllers\Staff\StaffQueueController::class)->names('staff.queues');
     Route::get('/get-queues', [App\Http\Controllers\Staff\StaffQueueController::class, 'getData'])->name('staff.queues.get-data');
-    
+
+
+    Route::resource('/pending-queues', App\Http\Controllers\Staff\StaffPendingQueueController::class)->names('staff.pending-queues');
+    //Route::get('/get-pending-queues', [App\Http\Controllers\Staff\StaffPendingQueueController::class, 'getData'])->name('staff.pending-queues.get-data');
+
+    Route::resource('/claimed-queues', App\Http\Controllers\Staff\StaffClaimedQueueController::class)->names('staff.claimed-queues');
+    //Route::get('/get-claimed-queues', [App\Http\Controllers\Staff\StaffClaimedQueueController::class, 'getData'])->name('staff.claimed-queues.get-data');
+
+    Route::resource('/processing-queues', App\Http\Controllers\Staff\StaffProcessingQueueController::class)->names('staff.processing-queues');
+    //Route::get('/get-processing-queues', [App\Http\Controllers\Staff\StaffProcessingQueueController::class, 'getData'])->name('staff.processing-queues.get-data');
+
+    Route::resource('/completed-queues', App\Http\Controllers\Staff\StaffCompletedQueueController::class)->names('staff.completed-queues');
+    //Route::get('/get-completed-queues', [App\Http\Controllers\Staff\StaffCompletedQueueController::class, 'getData'])->name('staff.completed-queues.get-data');
+
+
     Route::post('/queue/start-processing/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'startProcess'])->name('staff.queue.start-process');
     Route::post('/queue/mark-completed/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'markCompleted'])->name('staff.queue.mark-completed');
     Route::post('/queue/move-to-step/{id}', [App\Http\Controllers\Staff\StaffQueueController::class, 'moveToStep'])->name('staff.queue.move-to-step');
