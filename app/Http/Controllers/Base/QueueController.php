@@ -13,11 +13,17 @@ class QueueController extends Controller
 
         $req->perpage ? $perpage = $req->perpage : $perpage = 5;
 
+
         $data = Queue::with([
             'service',
             'currentStep',
             'serviceSteps'
-        ])->where('queue_number', 'like', '%' . $req->search . '%')
+        ])
+        ->when($req->status, function($q) use ($req){
+            $q->where('status', $req->status);
+        })
+
+        ->where('queue_number', 'like', '%' . $req->search . '%')
         ->orderBy('id', 'desc')
         ->paginate($perpage);
 

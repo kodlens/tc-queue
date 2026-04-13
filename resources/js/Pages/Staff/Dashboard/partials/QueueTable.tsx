@@ -24,13 +24,16 @@ export default function QueueTable() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [menuLoading, setMenuLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState<QueueFilters>();
 
 
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['queues', page],
     queryFn: async() => {
       const params = new URLSearchParams({
-        page: page.toString()
+        page: page.toString(),
+        search: (search?.search ?? '').toString(),
+        status: search?.status || '',
       })
       const res = await axios.get(`/staff/get-queues?${params}`)
       return res.data
@@ -40,6 +43,8 @@ export default function QueueTable() {
 
     const handleFilterChange = (filters: QueueFilters) => {
       console.log('Filters:', filters)
+      setSearch(filters)
+      //refetch()
       // later: pass to table or backend
     }
 
