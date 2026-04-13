@@ -41,7 +41,7 @@ export type QueueItem = {
   client_name?: string
   status?: 'waiting' | 'processing' | 'completed' | 'claimed'
   priority?: 'normal' | 'urgent'
-  created_at?: string
+  created_at?: string;
   service_steps?: Step[];
   current_step?: Step;
 }

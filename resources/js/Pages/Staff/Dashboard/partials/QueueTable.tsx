@@ -129,10 +129,9 @@ export default function QueueTable() {
 
       <div className="mb-4">
         <QueueFilterBar onChange={handleFilterChange} onRefresh={refetch}/>
-
       </div>
 
-      <Table 
+      <Table
         dataSource={data ? data?.data : []}
         className='overflow-auto'
         loading={isFetching}
@@ -190,24 +189,7 @@ export default function QueueTable() {
             </Tag>
           )}
         />
-        {/* <Column
-          title="Priority"
-          dataIndex="priority"
-          key="priority"
-          render={(priority: string) => (
-            <Tag
-              color={
-                priority === 'normal'
-                  ? 'default'
-                  : priority === 'urgent'
-                  ? 'orange'
-                  : 'green'
-              }
-            >
-              {priority.toUpperCase()}
-            </Tag>
-          )}
-        /> */}
+
         <Column
           title="Actions"
           key="actions"
@@ -234,11 +216,11 @@ export default function QueueTable() {
                 icon: <Footprints size={15} />,
                 label: 'Set Step',
                 disabled: record.status === 'completed' || record.status === 'waiting',
-                children: record.service_steps?.map((step:Step, idx:number) => ({
-                  key: `step-${idx}`,
+                children: record.service_steps?.map((step:Step) => ({
+                  key: `step-${step.id}`,
                   label: step?.name,
                   onClick: () => handleMoveStep(record, step),
-                })),
+                }))
               },
               {
                 key: 'completed',
@@ -257,7 +239,7 @@ export default function QueueTable() {
             ]
 
             return (
-              <Dropdown menu={{ items: menuItems }} trigger={['click']}>
+              <Dropdown menu={{ items: menuItems,  selectedKeys: [`step-${record.current_step?.id}`] }} trigger={['click']}>
                 <Button loading={menuLoading} type="text" icon={<MoreOutlined />} />
               </Dropdown>
             )
