@@ -1,5 +1,5 @@
-import { Table, Dropdown, Button, Tag, MenuProps, App, Pagination, Input, Select } from 'antd'
-import { MoreOutlined, EyeOutlined, SyncOutlined, CheckOutlined, SearchOutlined, DeleteOutlined } from '@ant-design/icons'
+import { Table, Dropdown, Button, Tag, MenuProps, App, Pagination, Input } from 'antd'
+import { MoreOutlined, EyeOutlined, SyncOutlined, CheckOutlined, SearchOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import { Footprints, Mail } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
@@ -140,7 +140,7 @@ export default function QueueTableWithStatus({ status }: Props) {
         />
 
         <Button
-          className='justify-end'
+          className='ml-auto'
           icon={<SearchOutlined />}
           onClick={() => {refetch()}}>
           Search

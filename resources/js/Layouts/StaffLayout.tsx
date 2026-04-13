@@ -10,7 +10,7 @@ import {
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
-import { BookCopy, KeySquare, LogOut, Rows4 } from 'lucide-react';
+import { BookCopy, ChartCandlestick, Check, KeySquare, Loader, LogOut, Rows4, ThumbsUp } from 'lucide-react';
 
 const { Header, Sider, Content } = Layout;
 
@@ -65,19 +65,19 @@ export default function StaffLayout({
       children: [
         {
           key: 'staff.pending-queues',
-          icon: <Rows4 size={15}  />,
+          icon: <Loader size={15}  />,
           label: 'Pending Queues',
           onClick: () => router.visit('/staff/pending-queues'),
         },
         {
           key: 'staff.processing-queues',
-          icon: <Rows4 size={15}  />,
+          icon: <ChartCandlestick size={15}  />,
           label: 'Processing Queues',
           onClick: () => router.visit('/staff/processing-queues'),
         },
         {
           key: 'staff.completed-queues',
-          icon: <Rows4 size={15}  />,
+          icon: <ThumbsUp size={15}  />,
           label: 'Completed Queues',
           onClick: () => router.visit('/staff/completed-queues'),
         },
@@ -91,54 +91,8 @@ export default function StaffLayout({
 
     },
 
-
     { type: 'divider' },
 
-
-    // {
-    //   key: 'staff.documents',
-    //   icon: <ProfileOutlined />,
-    //   label: 'Documents',
-    //   onClick: () => router.visit('/staff/documents'),
-    // },
-    // {
-    //   key: 'staff.service-steps',
-    //   icon: <BarsOutlined />,
-    //   label: 'Service Steps',
-    //   onClick: () => router.visit('/staff/service-steps'),
-    // },
-    { type: 'divider' },
-
-    //{ type: 'divider' },
-    // {
-    //   key: 'posts',
-    //   icon: <FormOutlined />,
-    //   label: 'Posts',
-    //   children: [
-    //     {
-    //       key: 'staff.posts.articles',
-    //       label: 'Articles',
-    //       onClick: () => router.visit('/staff/posts'),
-    //     },
-    //     {
-    //       key: 'staff.posts.featureds',
-    //       label: 'Featured Posts',
-    //       onClick: () => router.visit('/staff/post-featured'),
-    //     },
-    //     {
-    //       key: 'staff.posts.archives',
-    //       label: 'Archives',
-    //       onClick: () => router.visit('/staff/post-archives'),
-    //     },
-    //   ],
-    // },
-    //{ type: 'divider' },
-    // {
-    //   key: 'staff.roles',
-    //   icon: <Shield size={16}/> ,
-    //   label: 'Roles',
-    //   onClick: () => router.visit('/staff/roles'),
-    // },
     {
       key: 'staff.my-account',
       icon: <UserOutlined />,
