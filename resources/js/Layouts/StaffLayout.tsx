@@ -9,6 +9,8 @@ import {
 } from '@ant-design/icons';
 
 import { Button, ConfigProvider, Layout, Menu, MenuProps } from 'antd';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import PanelSideBarLogo from '@/Components/PanelSideBarLogo';
 import { BookCopy, ChartCandlestick, KeySquare, Loader, LogOut, Rows4, ThumbsUp } from 'lucide-react';
 
@@ -41,6 +43,74 @@ export default function StaffLayout({
   const { post } = useForm();
   const [collapsed, setCollapsed] = useState(false);
 
+  const { data: waitingQueueCount } = useQuery({
+    queryKey: ['staff-waiting-queue-count'],
+    queryFn: async () => {
+      const res = await axios.get('/staff/get-queues', {
+        params: {
+          page: 1,
+          perpage: 1,
+          status: 'waiting',
+          search: '',
+        },
+      });
+
+      return Number(res.data?.total ?? 0);
+    },
+    staleTime: 30000,
+  });
+
+  const { data: processingQueueCount } = useQuery({
+    queryKey: ['staff-processing-queue-count'],
+    queryFn: async () => {
+      const res = await axios.get('/staff/get-queues', {
+        params: {
+          page: 1,
+          perpage: 1,
+          status: 'processing',
+          search: '',
+        },
+      });
+
+      return Number(res.data?.total ?? 0);
+    },
+    staleTime: 30000,
+  });
+
+  const { data: completedQueueCount } = useQuery({
+    queryKey: ['staff-completed-queue-count'],
+    queryFn: async () => {
+      const res = await axios.get('/staff/get-queues', {
+        params: {
+          page: 1,
+          perpage: 1,
+          status: 'completed',
+          search: '',
+        },
+      });
+
+      return Number(res.data?.total ?? 0);
+    },
+    staleTime: 30000,
+  });
+
+  const { data: claimedQueueCount } = useQuery({
+    queryKey: ['staff-claimed-queue-count'],
+    queryFn: async () => {
+      const res = await axios.get('/staff/get-queues', {
+        params: {
+          page: 1,
+          perpage: 1,
+          status: 'claimed',
+          search: '',
+        },
+      });
+
+      return Number(res.data?.total ?? 0);
+    },
+    staleTime: 30000,
+  });
+
   const handleLogout = () => {
     post(route('logout'));
   };
@@ -66,25 +136,53 @@ export default function StaffLayout({
         {
           key: 'staff.waiting-queues',
           icon: <Loader size={15}  />,
-          label: 'Waiting Queues',
+          label: (
+            <span className="inline-flex items-center gap-2">
+              <span>Waiting Queues</span>
+              <span className="inline-flex min-w-[18px] items-center justify-center rounded-full bg-white/25 px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white">
+                {waitingQueueCount ?? 0}
+              </span>
+            </span>
+          ),
           onClick: () => router.visit('/staff/waiting-queues'),
         },
         {
           key: 'staff.processing-queues',
           icon: <ChartCandlestick size={15}  />,
-          label: 'Processing Queues',
+          label: (
+            <span className="inline-flex items-center gap-2">
+              <span>Processing Queues</span>
+              <span className="inline-flex min-w-[18px] items-center justify-center rounded-full bg-white/25 px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white">
+                {processingQueueCount ?? 0}
+              </span>
+            </span>
+          ),
           onClick: () => router.visit('/staff/processing-queues'),
         },
         {
           key: 'staff.completed-queues',
           icon: <ThumbsUp size={15}  />,
-          label: 'Completed Queues',
+          label: (
+            <span className="inline-flex items-center gap-2">
+              <span>Completed Queues</span>
+              <span className="inline-flex min-w-[18px] items-center justify-center rounded-full bg-white/25 px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white">
+                {completedQueueCount ?? 0}
+              </span>
+            </span>
+          ),
           onClick: () => router.visit('/staff/completed-queues'),
         },
         {
           key: 'staff.claimed-queues',
           icon: <Rows4 size={15}  />,
-          label: 'Claimed Queues',
+          label: (
+            <span className="inline-flex items-center gap-2">
+              <span>Claimed Queues</span>
+              <span className="inline-flex min-w-[18px] items-center justify-center rounded-full bg-white/25 px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white">
+                {claimedQueueCount ?? 0}
+              </span>
+            </span>
+          ),
           onClick: () => router.visit('/staff/claimed-queues'),
         },
       ]
