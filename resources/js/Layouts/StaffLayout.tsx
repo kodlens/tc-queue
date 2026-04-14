@@ -145,7 +145,7 @@ export default function StaffLayout({
         style={siderStyle}
         onBreakpoint={(broken) => setCollapsed(broken)}
       >
-        <PanelSideBarLogo collapse={!collapsed}/>
+        <PanelSideBarLogo collapse={collapsed}/>
 
         <ConfigProvider
           theme={{
