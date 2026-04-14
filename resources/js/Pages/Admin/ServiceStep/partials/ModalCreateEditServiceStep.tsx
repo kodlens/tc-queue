@@ -70,12 +70,12 @@ const ModalCreateEditServiceStep = ( { open, form, errors, id, closeModal, onFin
           form={form}
           layout="vertical"
           onFinish={onFinish}
-          initialValues={{ 
-            service_id: 0,
+          initialValues={{
+            service_id: null,
             name: null,
             step_order: 1,
             sla_minutes: 0,
-            active: true 
+            active: true
           }}
           disabled={loading}
         >

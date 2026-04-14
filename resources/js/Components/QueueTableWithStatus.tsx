@@ -140,6 +140,11 @@ export default function QueueTableWithStatus({ status }: Props) {
           prefix={<SearchOutlined />}
           value={search?.queue || ''}
           onChange={(e) => setSearch({ ...search, queue: e.target.value })}
+          onKeyDown={(e)=>{
+            if(e.key === 'Enter'){
+              refetch()
+            }
+          }}
           style={{ width: 260 }}
         />
 

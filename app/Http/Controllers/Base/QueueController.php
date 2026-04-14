@@ -22,7 +22,7 @@ class QueueController extends Controller
             $q->where('status', $req->status);
         })
 
-        ->where('queue_number', 'like', '%' . $req->search . '%')
+        ->where('queue_number', 'like', '%' . $req->queue . '%')
         ->orderBy('id', 'desc')
         ->paginate($perpage);
 
