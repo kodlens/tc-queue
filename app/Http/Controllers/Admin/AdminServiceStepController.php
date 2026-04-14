@@ -40,6 +40,7 @@ class AdminServiceStepController extends Controller
 
 
     public function store(Request $req){
+
         $validate = $req->validate([
             'service_id' => ['required'],
             'name' => ['required', 'string', 'max:255'],
@@ -64,6 +65,7 @@ class AdminServiceStepController extends Controller
             'name' => $validate['name'],
             'step_order' => $req->input('step_order'),
             'sla_minutes' => $req->input('sla_minutes'),
+            'active' => $req->input('active') ? 1 : 0,
         ]);
 
         return response()->json([
@@ -76,22 +78,27 @@ class AdminServiceStepController extends Controller
         $serviceStep = ServiceStep::findOrFail($id);
 
         $validatedData = $req->validate([
-            'service_id' => ['required'],
+            'service_id' => ['required', 'not_in:0'],
             'name' => ['required', 'string', 'max:255'],
+            'step_order' => ['required', 'integer', 'not_in:0'],
+        ],[
+            'service_id.not_in' => 'The service field is required.',
+            'step_order.not_in' => 'The step order field is required.',
         ]);
 
         $serviceStep->update([
             'service_id' => $validatedData['service_id'],
             'name' => $validatedData['name'],
-            'step_order' => $req->input('step_order'),
+            'step_order' => $validatedData['step_order'],
             'sla_minutes' => $req->input('sla_minutes'),
+            'active' => $req->input('active') ? 1 : 0,
         ]);
 
         return response()->json([
             'status' => 'updated'
         ], 200);
     }
-    
+
     public function destroy($id){
         $serviceStep = ServiceStep::findOrFail($id);
         $serviceStep->delete();

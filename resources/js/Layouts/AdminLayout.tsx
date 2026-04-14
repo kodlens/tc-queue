@@ -124,10 +124,14 @@ export default function AdminLayout({
         trigger={null}
         collapsible
         collapsed={collapsed}
+        onBreakpoint={(b) => {
+          setCollapsed(b)
+        }}
         width={300}
         breakpoint="md"
+
         style={siderStyle}
-        onBreakpoint={(broken) => setCollapsed(broken)}
+
       >
         <PanelSideBarLogo collapse={collapsed}/>
 

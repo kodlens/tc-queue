@@ -32,7 +32,6 @@ class AdminServiceController extends Controller
     }
 
     public function store(Request $req){
-
         $req->validate([
             'name' => ['required', 'unique:services'],
         ]);

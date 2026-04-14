@@ -138,7 +138,7 @@ const AdminServiceStepIndex = ( { services }: { services: Service[] }) => {
           }
         })
       }
-    
+
     } catch (err: any) {
       setLoading(false)
 
@@ -155,7 +155,7 @@ const AdminServiceStepIndex = ( { services }: { services: Service[] }) => {
           placement: 'bottomRight',
         })
       }
-    } 
+    }
   }
 
   const onChangeService = (value: number) => {
@@ -184,7 +184,7 @@ const AdminServiceStepIndex = ( { services }: { services: Service[] }) => {
             <Select className='w-full' options={services.map(item => ({
               label: item.name,
               value: item.id,
-            }))} 
+            }))}
             onChange={onChangeService} allowClear/>
           </div>
           <div className="flex flex-wrap gap-2 mb-4 items-center">
