@@ -15,8 +15,7 @@ class QueueController extends Controller
 
         $data = Queue::with([
             'service',
-            '
-            +',
+            'currentStep',
             'serviceSteps'
         ])
         ->when($req->status, function($q) use ($req){
