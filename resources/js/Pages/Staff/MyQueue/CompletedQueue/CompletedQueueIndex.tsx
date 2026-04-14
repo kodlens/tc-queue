@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import QueueTableWithStatus from '@/Components/QueueTableWithStatus';
+import { ReactElement, ReactNode } from 'react';
 
 const CompletedQueueIndex = () => {
   return (
@@ -11,5 +12,10 @@ const CompletedQueueIndex = () => {
   )
 }
 
-CompletedQueueIndex.layout = (page:any) => <Authenticated user={page.props.auth.user}>{page}</Authenticated>
+
 export default CompletedQueueIndex
+
+CompletedQueueIndex.layout = (page:ReactNode) => <Authenticated
+  user={(page as ReactElement).props.auth.user}>
+    {page}
+  </Authenticated>
