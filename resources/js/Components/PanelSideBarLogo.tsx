@@ -1,7 +1,5 @@
 const PanelSideBarLogo = ( { collapse } : { collapse?:boolean }) => {
 
-  console.log(collapse);
-
   return (
     <div className="demo-logo-vertical my-10 mx-4">
         <img width="100" className='mx-auto' src="/img/tc-logo.png"></img>
