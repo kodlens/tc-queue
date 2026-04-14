@@ -84,8 +84,6 @@ const AdminUserIndex = () => {
     refetchOnWindowFocus: false
   })
 
-
-
   const onPageChange = (index: number, perPage: number) => {
     setPage(index)
     setPerPage(perPage)
