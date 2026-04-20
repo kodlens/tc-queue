@@ -15,7 +15,7 @@ class ServiceSeeder extends Seeder
     {
         $data = [
             [
-                'code' => 'ORS',
+                'code' => 'OBR',
                 'name' => 'Obligation Request and Status',
                 'slug' => Str::slug('Obligation Request and Status'),
                 'description' => '',
@@ -43,15 +43,15 @@ class ServiceSeeder extends Seeder
                 'active' => 1,
             ],
             [
-                'code' => 'COA',
+                'code' => 'CA',
                 'name' => 'Certificate of Appearance',
                 'slug' => Str::slug('Certificate of Appearance'),
                 'description' => '',
                 'active' => 1,
             ],
             [
-                'code' => 'OTHER',
-                'name' => 'Other Services',
+                'code' => 'OTHER/OTR',
+                'name' => 'Other Services / OTR',
                 'slug' => Str::slug('Other Services'),
                 'description' => '',
                 'active' => 1,

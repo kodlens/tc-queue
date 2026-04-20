@@ -19,8 +19,10 @@ return new class extends Migration
                 ->on('services')
                 ->onDelete('cascade');
             $table->string('name', 255)->nullable();
+            $table->string('tts_text', 255)->nullable();
             $table->integer('step_order')->default(0)->nullable();
             $table->integer('sla_minutes')->default(0)->nullable();
+            $table->tinyInteger('is_tts')->default(1);
             $table->tinyInteger('active')->nullable();
             $table->index('service_id'); //index for better performance
             $table->timestamps();
