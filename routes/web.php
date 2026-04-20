@@ -49,11 +49,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/completed-request-reports', [App\Http\Controllers\Reports\CompletedRequestController::class, 'index'])->name('reports.completed-request-reports');
     Route::get('/reports/get-completed-requests', [App\Http\Controllers\Reports\CompletedRequestController::class, 'getCompletedRequests'])->name('reports.get-completed-requests');
 
-
-    // Route::get('/reports/articles-by-quarter', [ReportController::class, 'articlesByQuarter']);
-    // Route::get('/reports/articles-by-status', [ReportController::class, 'articlesByStatus']);
-    // Route::get('/reports/publication-timeliness', [ReportController::class, 'publicationTimeliness']);
-
     //global service API
     //Route::get('/remove-file/{filename}', [App\Http\Controllers\FileController::class, 'removeFile']);
 
